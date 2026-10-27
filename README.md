@@ -69,7 +69,7 @@ Each step needs the one before it; a skill whose inputs don't exist, or aren't a
 /site-brief      who the visitor is, what they doubt, what they must do          → docs/site-brief.md
  └─ /site-plan   every page, its one action, its argument, the SEO map           → docs/site-plan.md
      ├─ /site-setup       the foundation, once                                   → the project
-     │   └─ /design-system   the signature, the system, DESIGN.md                → DESIGN.md
+     │   └─ /design-system   the look: one signature, one system                 → DESIGN.md
      └─ /site-copy        every word, before any design                          → docs/copy/
          └─ /site-build   per page: design for approval → build → check          → Designed · Built · Checked
              └─ /site-launch   every check on production, domain, handover       → Live
@@ -99,7 +99,7 @@ The foundation, once: the Next.js project, the shell and section primitives, fon
 **Writes** the foundation, `docs/infra/infra-setup.md`
 
 ### `/design-system`
-How the site looks and moves: inventories what only this business has, researches the category's best sites, proposes a direction with one signature — checked against the AI-default tells and the competitor test — for your approval, then writes `DESIGN.md` and applies its tokens to the code.
+How the site looks and moves: inventories what only this business has, researches the category's best sites, proposes a direction with one signature — checked against the looks generated sites default to, and against the competitor test: would it work unchanged for a rival? — for your approval, then writes `DESIGN.md` and applies its tokens to the code.
 **Writes** `DESIGN.md`
 
 ### `/site-copy`
@@ -115,7 +115,7 @@ Takes the site live: every check on every page against production, the forms del
 **Writes** `docs/launch.md`
 
 ### `/site-audit`
-Audits any site — this one or a URL: the bundled script measures each page at five widths (Lighthouse, axe, headers, metadata, structured data, links, small text, the first screen), you read the copy and screenshots for conversion, copy and design, and the report scores each area with a prioritised fix list naming the skill that fixes each item.
+Audits any site — this one or a URL: the bundled script measures each page at five widths (speed, accessibility, security headers, metadata, structured data, links, small text, the first screen), you read the copy and screenshots for conversion, copy and design, and the report scores each area with a prioritised fix list naming the skill that fixes each item.
 **Writes** `docs/audits/`
 
 ### `/site-fix`
@@ -135,9 +135,9 @@ Loaded by Claude Code at the start of every session — except `ci-cd.md`, which
 | `coding-standards.md` | Static by default, server first, content as data; structure, images, fonts, styling, motion, forms, metadata |
 | `design.md` | One signature, a system with character, moments where earned; the hero, type, colour, layout, images, motion; expressive sites; the tells |
 | `content.md` | Copy and microcopy: the visitor's words, headlines within budget, calls to action, real proof, errors, 404, meta copy |
-| `conversion.md` | One action per page, the first screen's four facts, proof beside doubt, forms, pricing, landing pages |
+| `conversion.md` | One action per page, what the first screen must say, proof beside doubt, forms, pricing, landing pages |
 | `seo.md` | One intent per page, metadata, structured data by page type, sitemap, redirects, local businesses, after launch |
-| `performance.md` | The budgets (LCP, INP, CLS, Lighthouse 90, JS and weight), static first, images, fonts, scripts, stability |
+| `performance.md` | The speed budgets (Core Web Vitals, Lighthouse 90 on mobile, script and page weight), static first, images, fonts, scripts, layout stability |
 | `accessibility.md` | WCAG 2.2 AA made concrete: structure, contrast, keyboard and focus, controls, forms, media, motion, how it's checked |
 | `security.md` | Headers and CSP, forms under abuse, visitors' data and consent, secrets, dependencies, deployment |
 | `analytics.md` | The action counted, privately: provider, events, naming, what the owner sees |
@@ -172,6 +172,6 @@ The zip appears under the release's **Assets** as `website-blueprint-v{version}.
 - Node 22 or later, and Claude Code
 - For the `/design` canvas: Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview) — without it, `/design-system` and `/site-build` work as HTML prototypes instead
 - Optional, for design research: Mobbin, connected through its MCP. Without it, the design skills research on the web, plus any screenshots you put in `docs/design/references/`
-- For the audit script: Playwright, axe and Lighthouse — the project has them; outside a project the script installs them once
+- For the audit script: Playwright, axe and Lighthouse — `/site-setup` installs them in the project; outside a project the script installs them once
 
 **License** proprietary — all rights reserved.

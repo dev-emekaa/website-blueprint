@@ -75,7 +75,7 @@ Start with `/site-brief` and give it the URL. It runs `/site-audit` first, recor
 
 **`/site-setup`** — Builds the foundation: the Next.js project, the shell and section primitives, fonts and tokens, metadata and structured-data helpers, the form pipeline with spam protection and delivery, analytics with consent, security headers, the `pnpm check` suite, CI and Vercel, and the guide to the steps only you can do.
 
-**`/design-system`** — Writes `DESIGN.md`: an inventory of what only this business has, research of the category's best sites — on Mobbin when it's connected, otherwise on the web, plus any screenshots you add — then a direction with one signature, checked against the AI-default tells and the competitor test, for your approval.
+**`/design-system`** — Writes `DESIGN.md`: an inventory of what only this business has, research of the category's best sites — on Mobbin when it's connected, otherwise on the web, plus any screenshots you add — then a direction with one signature, checked against the looks generated sites default to and against the competitor test (would it work unchanged for a rival?), for your approval.
 
 **`/site-copy`** — Every word before any design: headlines that survive a phone, each section's claim and proof, calls to action that say what happens, form labels, errors and confirmations, meta titles and descriptions, alt text. In the brand's voice, with real proof only.
 
@@ -109,6 +109,6 @@ Loaded at the start of every session, except `ci-cd.md`, which loads only when a
 
 ---
 
-**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. The audit script needs Playwright, axe and Lighthouse — the project has them, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
+**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. The audit script needs Playwright, axe and Lighthouse — `/site-setup` installs them in the project, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
 
 © dev-emeka. All rights reserved. Licensed for use in your own projects; not for redistribution.
