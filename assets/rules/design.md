@@ -18,7 +18,7 @@ The first screen says what this is, who it's for, and what to do — in HTML tex
 
 - One or two families, chosen for this subject, never the ones reached for on every project. Two families is the norm; never two in one headline.
 - Five sizes at most; two or three do the visible work. Display at least 3× body on desktop. Big type does not need to be bold.
-- Body 16–20px, line-height 1.5–1.6, measure 60–75 characters (hard limit 88). Headings 1.1–1.3. Nothing readable below 13px; inputs at least 16px on phones.
+- Body 16–20px, line-height 1.5–1.6, measure 60–75 characters (hard limit 88). Headings 1.1–1.3. The size floors are `accessibility`'s: nothing readable below 13px, inputs at least 16px on phones.
 - Display over 40px: tracking −0.02 to −0.05em. Uppercase labels, where used at all, +0.03 to +0.05em and short.
 - `text-wrap: balance` on headings, `pretty` on paragraphs; `tabular-nums` on prices and numbers in columns.
 - Space above a heading is at least twice the space below it.
@@ -28,14 +28,14 @@ The first screen says what this is, who it's for, and what to do — in HTML tex
 
 - One ground (most of the screen), one ink, one accent that carries the action and at most one other thing. Status colours only where the site has status.
 - Two tiers of tokens: primitives (`--stone-700`) never appear in components; semantic tokens (`text-muted`, `bg-surface`) do. The brand colour is `accent`.
-- Contrast measured on the rendered pair, against the painted background behind it: 4.5:1 body, 3:1 large text and UI boundaries. Running text in full ink, not grey. Solid fills on the step that passes with white text, which is usually darker than the one that looks right.
+- Contrast measured on the rendered pair, against the painted background behind it, at the ratios `accessibility` sets. Running text in full ink, not grey. Solid fills on the step that passes with white text, which is usually darker than the one that looks right.
 - Surfaces separate by a small lightness step, by space, or by a thick bar — not by a hairline on everything and not by a shadow under everything.
 - Dark mode, where the brief wants it, is designed: lower accent chroma, a tinted deep ground rather than black, re-measured contrast. Never the light palette inverted.
 
 ## Layout
 
-- Responsive from 320px with no horizontal scroll at any width; that is the reflow threshold and the canvas at 200% zoom. Text columns keep a max width; imagery may run full-bleed.
-- Margins equal on both sides at every width, 16–20px on phones. Two or three text anchor lines per page; six means nothing was decided.
+- Responsive from 320px with no horizontal scroll at any width; that is the reflow threshold — a 1280px screen at 400% zoom. Text columns keep a max width; imagery may run full-bleed.
+- Margins equal on both sides at every width, 16–20px on phones. Text aligns to two or three left edges on a page; six means nothing was decided.
 - Space between groups is at least twice the space within them. Section gaps on desktop are generous (roughly 120–240px) and clearly larger than gaps inside a section.
 - No two neighbouring sections share a layout shape; a shape used three times on a page is a template. Each layout family (split, grid, full-width statement, list) at most once per page.
 - Structure is information: borders, numbering, dividers and labels encode something about the content. Numbered markers only for a real sequence.
@@ -56,7 +56,7 @@ The first screen says what this is, who it's for, and what to do — in HTML tex
 - Tokens: a duration scale and named easings, so the site moves with one character. Press ~150ms, hover ~200ms, reveals 600–900ms, staggers 60–100ms and at most four steps. No bounce or overshoot unless the brand is playful.
 - Reveals fire once, near the viewport edge, with small travel. Nothing in view stays hidden beyond a second; the headline is readable within 1.2 seconds of load.
 - No preloader, no gate, no hidden cursor, no scroll hijack. Smooth scrolling only when choreography needs it, and never under reduced motion.
-- Under `prefers-reduced-motion`, the page is its finished state; opacity fades may remain. Anything moving for more than five seconds has a pause.
+- Under `prefers-reduced-motion`, the page is its finished state; opacity fades may remain. The pause rule and the rest are `accessibility`'s.
 
 ## Expressive sites
 

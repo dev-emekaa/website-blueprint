@@ -44,12 +44,12 @@ Dependency direction: `lib` ← `ui` ← `sections` ← `shell` ← `app`. Nothi
 ## Images
 
 - Always `next/image` with explicit `width` and `height` (or `fill` in a sized container), a `sizes` attribute that matches the layout, and `alt` from the copy deck. The LCP image gets `priority`; everything else lazy-loads.
-- Sources in `public/images/` are already resized to their largest rendered size at 2× and recorded in `ATTRIBUTION.md`. Next serves AVIF and WebP from them.
+- Sources in `public/images/` are sized per `performance` and recorded in `ATTRIBUTION.md`. Next serves AVIF and WebP from them once `images.formats` lists both in `next.config` (the default is WebP only).
 - Background images that carry meaning are `<img>`, not CSS, so they get `alt` and lazy loading.
 
 ## Fonts
 
-- `next/font` for every family: self-hosted, subset, `display: swap`, with the automatic size-adjusted fallback so text doesn't shift when the font arrives.
+- `next/font` for every family, with the settings `performance` → Fonts gives, so text doesn't shift when the font arrives.
 - Font variables on `<html>`; Tailwind reads them from the theme. No `<link>` to a font CDN.
 
 ## Styling
@@ -63,7 +63,7 @@ Dependency direction: `lib` ← `ui` ← `sections` ← `shell` ← `app`. Nothi
 ## Motion
 
 - Animate `transform`, `opacity` and `clip-path` only. Never layout properties.
-- Hidden starting states live inside `@media (prefers-reduced-motion: no-preference)`, so with reduced motion the page is simply in its finished state. Nothing above the fold waits for a scroll or a script.
+- Hidden starting states live inside `@media (prefers-reduced-motion: no-preference)`, which is how `accessibility`'s reduced-motion rule is met: the page is simply in its finished state. Nothing above the fold waits for a scroll or a script.
 - No scroll event listeners: `IntersectionObserver`, CSS scroll-driven animations, or the library's scroll hooks. Values driven by the pointer or scroll live in refs or motion values, never React state.
 - Every animation cleans up on unmount. Animated components are client leaves; the page around them stays a Server Component.
 - WebGL and heavy libraries load after first paint, behind a poster image, pause when off-screen or the tab is hidden, and are disposed when done.
@@ -72,7 +72,7 @@ Dependency direction: `lib` ← `ui` ← `sections` ← `shell` ← `app`. Nothi
 
 - One Zod schema per form, shared by the client and the Server Action. The action validates again, runs the spam checks, delivers, and returns a typed result the form renders.
 - Fields use the project's `Field` primitive, so every input gets its label, description, error wiring and `autocomplete` value.
-- The submit button is never disabled for validation; while pending it is `aria-disabled` and keeps its label. Success and failure are rendered states with the copy deck's words, and the confirmation names the action the button named.
+- The submit button behaves as `accessibility` → Forms says. Success and failure are rendered states with the copy deck's words, and the confirmation names the action the button named.
 
 ## Metadata and structured data
 

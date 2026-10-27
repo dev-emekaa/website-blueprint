@@ -6,20 +6,23 @@
  *
  * For each page (the URL, then the pages its sitemap or links reach, up to --pages, default 25):
  *   · response and security headers, redirect chain
- *   · rendered in Chromium at 390, 768 and 1440 px: screenshots, overflow, the h1, metadata,
+ *   · rendered in Chromium at 320, 390, 768, 1280 and 1920 px: screenshots, overflow, the h1, metadata,
  *     structured data, fonts, small text, images without alt or size, forms
  *   · axe accessibility violations at phone and desktop widths
- *   · Lighthouse at mobile settings: scores, LCP, CLS, TBT, page weight, JavaScript
+ *   · Lighthouse at mobile settings, three runs, the median: scores, LCP, CLS, TBT, page weight, JavaScript
  *   · broken internal links across the site
+ *
+ * The gates are the blueprint's rules (performance, accessibility, seo, security, design, conversion).
+ * Exits 1 when anything FAILs, so it can be the core of `pnpm check`.
  *
  * Writes <out>/report.json, <out>/report.md, <out>/screens/*.png and <out>/copy/*.txt.
  * Needs playwright, @axe-core/playwright and lighthouse. It uses the project's copies when
- * run inside one; otherwise it installs them once into ~/.cache/site-check/deps.
+ * it can resolve them from the current folder; otherwise it installs them once into ~/.cache/site-check/deps.
  */
 import { mkdir, writeFile, readFile, access } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
-import { join, resolve } from 'node:path';
+import { join, resolve, dirname } from 'node:path';
 import { homedir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 
@@ -31,7 +34,7 @@ const opt = (name, def) => { const i = args.indexOf(name); return i >= 0 ? args[
 const MAX_PAGES = Number(opt('--pages', 25));
 const NO_LH = args.includes('--no-lighthouse');
 const ONLY_URL = args.includes('--only-url');
-const start = new URL(url);
+let start = new URL(url);
 const OUT = resolve(opt('--out', join('.checks', start.hostname, new Date().toISOString().slice(0, 10))));
 await mkdir(join(OUT, 'screens'), { recursive: true });
 await mkdir(join(OUT, 'copy'), { recursive: true });
@@ -43,16 +46,18 @@ async function loadDeps() {
   const from = dir => createRequire(join(dir, 'package.json'));
   const load = async (req, n) => import(pathToFileURL(req.resolve(n)).href);
   const mods = {}, missing = [];
+  mods.__cli = null;   // the CLI of the Playwright copy in use, so the matching Chromium build can be installed
+  const cliOf = req => { try { return join(dirname(req.resolve('playwright/package.json')), 'cli.js'); } catch { return null; } };
   for (const n of need) {
-    try { mods[n] = await load(from(process.cwd()), n); continue; } catch { /* not in the project */ }
-    try { mods[n] = await load(from(depDir), n); continue; } catch { missing.push(n); }
+    try { mods[n] = await load(from(process.cwd()), n); if (n === 'playwright') mods.__cli = cliOf(from(process.cwd())); continue; } catch { /* not in the project */ }
+    try { mods[n] = await load(from(depDir), n); if (n === 'playwright') mods.__cli = cliOf(from(depDir)); continue; } catch { missing.push(n); }
   }
   if (missing.length) {
     console.log(`Installing ${missing.join(', ')} into ${depDir} (once)…`);
     await mkdir(depDir, { recursive: true });
     try { await access(join(depDir, 'package.json')); } catch { await writeFile(join(depDir, 'package.json'), '{"name":"site-check-deps","private":true}'); }
     execFileSync('npm', ['install', '--no-audit', '--no-fund', '--silent', ...missing], { cwd: depDir, stdio: 'inherit' });
-    for (const n of missing) mods[n] = await load(from(depDir), n);
+    for (const n of missing) { mods[n] = await load(from(depDir), n); if (n === 'playwright') mods.__cli = cliOf(from(depDir)); }
   }
   return mods;
 }
@@ -69,7 +74,7 @@ const slug = u => new URL(u).pathname.replace(/\/$/, '') .replace(/[^a-z0-9]+/gi
 
 const REQUIRED_HEADERS = {
   'content-security-policy': v => v ? null : 'missing',
-  'strict-transport-security': v => v && /max-age=\d{6,}/.test(v) ? null : 'missing or max-age under 1 year',
+  'strict-transport-security': v => v && Number((v.match(/max-age=(\d+)/) || [])[1]) >= 31536000 ? null : 'missing or max-age under 1 year',
   'x-content-type-options': v => v === 'nosniff' ? null : 'should be nosniff',
   'referrer-policy': v => v ? null : 'missing',
   'permissions-policy': v => v ? null : 'missing',
@@ -93,12 +98,14 @@ async function fetchInfo(u) {
 const probe = () => {
   const vh = innerHeight, vw = innerWidth;
   const text = el => (el?.textContent || '').trim().replace(/\s+/g, ' ');
+  const prose = el => (el?.innerText || '').replace(/[ \t]+/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
   const meta = n => document.querySelector(`meta[name="${n}"], meta[property="${n}"]`)?.content || '';
   const h1s = [...document.querySelectorAll('h1')];
   const h1 = h1s[0];
   const h1Rect = h1?.getBoundingClientRect();
   const h1Style = h1 && getComputedStyle(h1);
-  const h1Lines = h1 ? Math.round(h1Rect.height / parseFloat(h1Style.lineHeight || h1Style.fontSize)) : 0;
+  const h1Lh = h1 ? (isNaN(parseFloat(h1Style.lineHeight)) ? parseFloat(h1Style.fontSize) * 1.2 : parseFloat(h1Style.lineHeight)) : 0;
+  const h1Lines = h1 ? Math.round(h1Rect.height / h1Lh) : 0;
   const headings = [...document.querySelectorAll('h1,h2,h3,h4,h5,h6')].map(h => Number(h.tagName[1]));
   let skipped = false;
   for (let i = 1; i < headings.length; i++) if (headings[i] > headings[i - 1] + 1) skipped = true;
@@ -140,15 +147,15 @@ const probe = () => {
     small, tiny, fonts: [...fonts], fontCount: fonts.size,
     images: imgs.length,
     imagesNoAlt: imgs.filter(i => !i.hasAttribute('alt')).length,
-    imagesNoSize: imgs.filter(i => !i.getAttribute('width') || !i.getAttribute('height')).length,
+    imagesNoSize: imgs.filter(i => (!i.getAttribute('width') || !i.getAttribute('height')) && getComputedStyle(i).position !== 'absolute').length,
     forms: document.forms.length,
     inputsNoLabel: [...document.querySelectorAll('input:not([type=hidden]):not([type=submit]),textarea,select')]
       .filter(i => !i.labels?.length && !i.getAttribute('aria-label') && !i.getAttribute('aria-labelledby')).length,
     firstScreenButton,
     ldTypes, ldInvalid: ld.some(b => b.__invalid),
     links: [...document.querySelectorAll('a[href]')].map(a => a.href),
-    words: text(main).split(' ').length,
-    copy: text(main).slice(0, 20000),
+    words: prose(main).split(/\s+/).length,
+    copy: prose(main).slice(0, 20000),
   };
 };
 
@@ -177,11 +184,16 @@ async function launchBrowser() {
   catch (e) {
     if (!/Executable doesn't exist/.test(e.message)) throw e;
     console.log('Installing the Chromium build this Playwright needs (once)…');
-    execFileSync('npx', ['--yes', 'playwright', 'install', 'chromium'], { stdio: 'inherit' });
+    if (!deps.__cli) throw e;
+    execFileSync(process.execPath, [deps.__cli, 'install', 'chromium'], { stdio: 'inherit' });
     return chromium.launch();
   }
 }
 const browser = await launchBrowser();
+try {   // follow the first redirect (http → https, bare → www) so the site's real origin is audited
+  const first = await fetchInfo(start.href);
+  if (first.chain.length > 1 && new URL(first.final).hostname.replace(/^www\./, '') === start.hostname.replace(/^www\./, '')) start = new URL(first.final);
+} catch { /* judged per page below */ }
 const pages = await discoverPages(browser);
 console.log(`Checking ${pages.length} page(s) on ${start.origin} → ${OUT}`);
 const report = { site: start.origin, date: new Date().toISOString(), pages: [] };
@@ -212,8 +224,12 @@ for (const pageUrl of pages) {
 
   // rendered at three widths
   entry.widths = {};
-  for (const [label, width, height, mobile] of [['phone', 390, 844, true], ['tablet', 768, 1024, true], ['desktop', 1440, 900, false]]) {
-    const ctx = await browser.newContext({ viewport: { width, height }, hasTouch: mobile, deviceScaleFactor: mobile ? 2 : 1, reducedMotion: 'no-preference' });
+  const WIDTHS = [['narrow', 320, 568, true], ['phone', 390, 844, true], ['tablet', 768, 1024, true], ['desktop', 1280, 800, false], ['wide', 1920, 1080, false]];
+  const overflowAt = [], smallAt = [];
+  let axeRan = false;
+  const axeById = new Map();
+  for (const [label, width, height, mobile] of WIDTHS) {
+    const ctx = await browser.newContext({ viewport: { width, height }, isMobile: mobile, hasTouch: mobile, deviceScaleFactor: mobile ? 2 : 1, reducedMotion: 'no-preference' });
     const p = await ctx.newPage();
     try {
       await p.goto(pageUrl, { waitUntil: 'networkidle', timeout: 60000 });
@@ -231,40 +247,52 @@ for (const pageUrl of pages) {
         else if (m.titleLen > 65) F(name, 'SEO', 'WARN', `Title is ${m.titleLen} characters; search results cut it around 60`);
         if (!m.descriptionLen) F(name, 'SEO', 'FAIL', 'No meta description');
         else if (m.descriptionLen > 160) F(name, 'SEO', 'WARN', `Meta description is ${m.descriptionLen} characters; cut around 155`);
+        else if (m.descriptionLen < 50) F(name, 'SEO', 'WARN', `Meta description is only ${m.descriptionLen} characters: it won't give a reason to click`);
         if (!m.canonical) F(name, 'SEO', 'WARN', 'No canonical URL');
         if (!m.og.title || !m.og.image) F(name, 'SEO', 'WARN', 'Open Graph title or image missing: shared links show no preview');
-        if (!m.lang) F(name, 'Accessibility', 'FAIL', '<html> has no lang attribute (3.1.1)');
+        entry.lang = m.lang;
         if (!m.viewport) F(name, 'Performance', 'FAIL', 'No viewport meta tag');
         if (m.headingSkipped) F(name, 'Accessibility', 'WARN', 'Heading levels skip (for example h2 → h4)');
         if (!m.landmarks.main) F(name, 'Accessibility', 'WARN', 'No <main> landmark');
         if (m.ldInvalid) F(name, 'SEO', 'FAIL', 'A JSON-LD block does not parse');
         if (!m.ldTypes.length) F(name, 'SEO', 'WARN', 'No structured data');
-        if (m.imagesNoAlt) F(name, 'Accessibility', 'FAIL', `${m.imagesNoAlt} image(s) without an alt attribute (1.1.1)`);
+        entry.imagesNoAlt = m.imagesNoAlt;
         if (m.imagesNoSize) F(name, 'Performance', 'WARN', `${m.imagesNoSize} image(s) without width and height: layout can shift`);
-        if (m.inputsNoLabel) F(name, 'Accessibility', 'FAIL', `${m.inputsNoLabel} form field(s) without a label (1.3.1)`);
+        if (m.inputsNoLabel) F(name, 'Accessibility', 'FAIL', `${m.inputsNoLabel} form field(s) with no label — a placeholder is not a label (3.3.2)`);
         if (m.fontCount > 3) F(name, 'Design', 'WARN', `${m.fontCount} font families in use: ${m.fonts.join(', ')}`);
-        if (!m.firstScreenButton) F(name, 'Conversion', 'WARN', 'No visible action in the first screen on desktop');
         if (m.robots && /noindex/.test(m.robots)) F(name, 'SEO', 'WARN', 'Page is noindex');
       }
-      if (m.overflow) F(name, 'Accessibility', 'FAIL', `Horizontal scroll at ${width}px (1.4.10 reflow)`);
-      if (m.small) F(name, 'Design', m.tiny ? 'FAIL' : 'WARN', `${m.small} text node(s) under 13px at ${label}${m.tiny ? `, ${m.tiny} under 11px` : ''}`);
+      if (m.overflow) overflowAt.push(width);
+      if (m.small) smallAt.push({ label, small: m.small, tiny: m.tiny });
       if (label === 'phone') {
         if (m.h1Count && !m.h1InFirstScreen) F(name, 'Conversion', 'WARN', 'The h1 is not in the first screen on a phone');
+        if (!m.firstScreenButton) F(name, 'Conversion', 'WARN', 'No visible action in the first screen on a phone');
         if (m.h1Lines > 2) F(name, 'Design', 'WARN', `The headline wraps to ${m.h1Lines} lines on a phone`);
-        if (m.h1Px && m.h1Px < 28) F(name, 'Design', 'WARN', `The h1 is ${Math.round(m.h1Px)}px on a phone`);
+        if (m.h1Px && m.h1Px < 32) F(name, 'Design', 'WARN', `The h1 is ${Math.round(m.h1Px)}px on a phone (the rule is 32 or more)`);
       }
       // axe at phone and desktop
-      if (label !== 'tablet') {
+      if (label === 'phone' || label === 'desktop') {
         try {
           const axe = await new AxeBuilder({ page: p }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
-          const v = axe.violations.map(x => ({ id: x.id, impact: x.impact, help: x.help, nodes: x.nodes.length, wcag: x.tags.filter(t => /^wcag\d/.test(t)) }));
-          m.axe = v;
-          for (const x of v) F(name, 'Accessibility', ['critical', 'serious'].includes(x.impact) ? 'FAIL' : 'WARN', `axe ${x.id} (${x.impact}, ${x.nodes} element(s), ${label}): ${x.help}`);
+          axeRan = true;
+          m.axe = axe.violations.map(x => ({ id: x.id, impact: x.impact, help: x.help, nodes: x.nodes.length }));
+          for (const x of axe.violations) {
+            const cur = axeById.get(x.id) || { impact: x.impact, help: x.help, nodes: 0, at: [] };
+            cur.nodes = Math.max(cur.nodes, x.nodes.length); cur.at.push(label); axeById.set(x.id, cur);
+          }
         } catch (e) { F(name, 'Accessibility', 'WARN', `axe could not run at ${label}: ${e.message}`); }
       }
       delete m.copy; delete m.links;
     } catch (e) { F(name, 'Response', 'FAIL', `Could not render at ${label}: ${e.message}`); }
     await ctx.close();
+  }
+  // judged once per page, across widths
+  if (overflowAt.length) F(name, 'Accessibility', 'FAIL', `Horizontal scroll at ${overflowAt.join(', ')}px (1.4.10 reflow)`);
+  if (smallAt.length) { const worst = smallAt.reduce((a, b) => b.small > a.small ? b : a); F(name, 'Design', worst.tiny ? 'FAIL' : 'WARN', `Up to ${worst.small} text node(s) under 13px${worst.tiny ? `, ${worst.tiny} under 11px` : ''} (${smallAt.map(x => x.label).join(', ')})`); }
+  for (const [id, x] of axeById) F(name, 'Accessibility', ['critical', 'serious'].includes(x.impact) ? 'FAIL' : 'WARN', `axe ${id} (${x.impact}, ${x.nodes} element(s), ${x.at.join(' + ')}): ${x.help}`);
+  if (!axeRan) {   // axe covers these when it runs
+    if (entry.lang === '') F(name, 'Accessibility', 'FAIL', '<html> has no lang attribute (3.1.1)');
+    if (entry.imagesNoAlt) F(name, 'Accessibility', 'FAIL', `${entry.imagesNoAlt} image(s) without an alt attribute (1.1.1)`);
   }
 
   // lighthouse, mobile
@@ -273,16 +301,17 @@ for (const pageUrl of pages) {
       const lighthouse = deps.lighthouse.default ?? deps.lighthouse;
       const chromeLauncher = deps['chrome-launcher'].launch ? deps['chrome-launcher'] : deps['chrome-launcher'].default;
       const chrome = await chromeLauncher.launch({ chromePath: chromium.executablePath(), chromeFlags: ['--headless=new', '--no-sandbox'] });
-      const scores = [];
-      let lhr;
-      for (let i = 0; i < 2; i++) {
+      const runs = [];
+      for (let i = 0; i < 3; i++) {
         const r = await lighthouse(pageUrl, { port: chrome.port, output: 'json', logLevel: 'error', onlyCategories: ['performance', 'accessibility', 'best-practices', 'seo'] });
-        lhr = r.lhr; scores.push(lhr.categories.performance.score);
+        runs.push(r.lhr);
       }
       await chrome.kill();
+      runs.sort((a, b) => a.categories.performance.score - b.categories.performance.score);
+      const lhr = runs[1];   // the median run
       const a = lhr.audits;
       entry.lighthouse = {
-        performance: Math.round(Math.max(...scores) * 100),
+        performance: Math.round(lhr.categories.performance.score * 100),
         accessibility: Math.round(lhr.categories.accessibility.score * 100),
         bestPractices: Math.round(lhr.categories['best-practices'].score * 100),
         seo: Math.round(lhr.categories.seo.score * 100),
@@ -293,12 +322,12 @@ for (const pageUrl of pages) {
         jsKb: Math.round((a['network-requests']?.details?.items ?? []).filter(x => x.resourceType === 'Script').reduce((s, x) => s + (x.transferSize ?? 0), 0) / 1024),
       };
       const L = entry.lighthouse;
-      if (L.performance < 90) F(name, 'Performance', L.performance < 70 ? 'FAIL' : 'WARN', `Lighthouse performance ${L.performance} on mobile (budget 90)`);
+      if (L.performance < 90) F(name, 'Performance', L.performance < 50 ? 'FAIL' : 'WARN', `Lighthouse performance ${L.performance} on mobile (budget 90)`);
       if (L.lcpMs > 2500) F(name, 'Performance', L.lcpMs > 4000 ? 'FAIL' : 'WARN', `LCP ${(L.lcpMs / 1000).toFixed(1)} s (budget 2.5 s)`);
       if (L.cls > 0.1) F(name, 'Performance', L.cls > 0.25 ? 'FAIL' : 'WARN', `CLS ${L.cls} (budget 0.1)`);
       if (L.tbtMs > 300) F(name, 'Performance', 'WARN', `Total blocking time ${L.tbtMs} ms: the page is slow to respond`);
-      if (L.jsKb > 300) F(name, 'Performance', 'WARN', `${L.jsKb} KB of JavaScript transferred (budget 150 KB for a content site)`);
-      if (L.weightKb > 2500) F(name, 'Performance', 'WARN', `Page weight ${(L.weightKb / 1024).toFixed(1)} MB`);
+      if (L.jsKb > 150) F(name, 'Performance', 'WARN', `${L.jsKb} KB of JavaScript transferred (budget 150 KB for a content site, 300 KB for an expressive one)`);
+      if (L.weightKb > 1536) F(name, 'Performance', 'WARN', `Page weight ${(L.weightKb / 1024).toFixed(1)} MB (budget 1.5 MB)`);
       if (L.seo < 90) F(name, 'SEO', 'WARN', `Lighthouse SEO ${L.seo}`);
       if (L.bestPractices < 90) F(name, 'Security', 'WARN', `Lighthouse best practices ${L.bestPractices}: see the Lighthouse report for console errors, mixed content or deprecated APIs`);
     } catch (e) { F(name, 'Performance', 'WARN', `Lighthouse could not run: ${e.message}`); }
@@ -339,4 +368,4 @@ for (const [area, list] of Object.entries(by('area')).sort()) {
 md += `\nScreenshots: \`${join(OUT, 'screens')}\` · page text: \`${join(OUT, 'copy')}\` · raw data: \`${join(OUT, 'report.json')}\`\n`;
 await writeFile(join(OUT, 'report.md'), md);
 console.log(`\n${fails} FAIL, ${warns} WARN → ${join(OUT, 'report.md')}`);
-process.exit(0);
+process.exit(fails ? 1 : 0);

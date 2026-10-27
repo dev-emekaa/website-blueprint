@@ -19,10 +19,11 @@ Against the latest Vercel preview of `main`, or the production domain before the
 2. **Structured data** on each page type in Google's Rich Results test.
 3. **Social previews**: the Open Graph image and text for the home page and each page the plan gave its own, checked in a preview tool.
 4. **Forms end to end** to the *real* destination: a submission arrives in the inbox, CRM or calendar the brief named, in the form the owner will see; the confirmation renders; a bad submission shows its errors; the honeypot rejects a bot.
-5. **Analytics**: the provider receives a page view and the primary action's event from the preview with production settings, with no personal data in the payload.
+5. **Analytics**: on the preview, the event helper fires the primary action's event with the right name and properties and no personal data (in the provider's debug mode or the console; previews don't send). The live check is in Step 2.
 6. **By hand**: the keyboard pass on the home page and the form; a real phone, mid-range, on cellular; reduced motion; 200% zoom.
 7. **Redesign only**: every redirect from the plan's map resolves to its page with one hop; the never-change list is intact; the old site is still reachable.
-8. **Legal**: the privacy page lists exactly the services loaded; the consent control works where required.
+8. **Legal**: the privacy page lists exactly the services loaded; the accessibility statement exists where required; the consent control works where required.
+9. **Previews are `noindex`**: confirm the header on the preview URL.
 
 List what passed, what was fixed, and what I must do: the DNS records from the infra guide, and any account not yet connected. Ask for the go.
 

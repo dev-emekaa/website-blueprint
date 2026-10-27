@@ -29,7 +29,7 @@ Then confirm it against the docs: is the page doing what its deck and export say
 | Accessibility | A criterion failed, or a task a visitor can't complete | The code; the deck if labels or errors change |
 | SEO | Metadata, structured data, a redirect, an indexing error from Search Console | The code or the content; the plan's SEO map if the intent changes |
 | Security | A header, a CSP violation, a dependency advisory, spam getting through | The config or the pipeline |
-| Design change | A section or page should look different | Back to `/site-build`'s design stage for that page, on its canvas when the tracker's link opens — not this skill |
+| Design change | A section or page should look different | Back to `/site-build`'s design stage for that page, on its canvas if the tracker's link still opens — not this skill |
 
 A permission, a service or a dependency added to fix something is a plan change: raise it before adding it.
 
@@ -37,7 +37,7 @@ A permission, a service or a dependency added to fix something is a plan change:
 
 - **The cheapest fix that is right**, in this order: delete what causes it; use the platform (the browser, Next, the primitive) instead of custom code; reuse an existing token or component; correct the value; add something new. Only when the earlier options don't work.
 - The fix is surgical: it changes the page or component with the issue, not its neighbours. A change to a shared component is checked on every page that uses it.
-- A copy change is made in the deck first, in the brand's voice, then rendered. A design-drift fix matches the export; if I approve the new look instead, the export is replaced (edited on the canvas when its link opens, otherwise redesigned from the export and `DESIGN.md`) and I approve the new one.
+- A copy change is made in the deck first, in the brand's voice, then rendered. A design-drift fix matches the export; if I approve the new look instead, the export is replaced (edited on the canvas if its link still opens, otherwise redesigned from the export and `DESIGN.md`) and I approve the new one.
 - Tokens are never changed to fix one page. A token that is wrong is a design-system change, raised with me.
 
 ## Step 4 — Verify

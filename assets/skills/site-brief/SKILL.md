@@ -105,12 +105,12 @@ Restrained / bold / experimental · Sites admired and why · Constraints from th
 Provider · What counts as a conversion
 
 ## Assumptions
-Every choice I made because you left it open, marked so you can overturn it
+Every choice you made because I left it open, marked so I can overturn it
 ```
 
 ## Step 5 — Review → **wait for my approval**
 
-Present the brief. Say what you assumed, what the research changed about my description, and anything you'd push back on: an action the visitor won't take, a claim the business can't prove, a page that answers no search. I approve, or ask for changes. Then set `Status: approved` with the date, record the business name, site type and primary action in `CLAUDE.md`'s project configuration, and commit.
+Present the brief. Say what you assumed, what the research changed about my description, and anything you'd push back on: an action the visitor won't take, a claim the business can't prove, a page that answers no search. I approve, or ask for changes. Then set `Status: approved` with the date, fill in `CLAUDE.md`'s project configuration from the brief (site name, what it is for, site type, primary action, ambition, market, form delivery, analytics), and commit.
 
 ## Rules
 

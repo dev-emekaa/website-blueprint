@@ -24,7 +24,7 @@ Order: the home page first, because it carries the signature and sets the shared
 
 ### Step 1 — Read
 
-The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with their claim and the layout family each will use, so that no two neighbours share one and no family repeats on the page. Decide which section carries the signature or the page's moment, from the plan. For a page that already exists (a redesign of a built page), open its canvas from the tracker's link when it opens; otherwise design from its export and `DESIGN.md`.
+The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with their claim and the layout family each will use, so that no two neighbours share one and no family repeats on the page. Decide which section carries the signature or the page's moment, from the plan. For a page that already exists (a redesign of a built page), open its canvas from the tracker's link if the link still opens; otherwise design from its export and `DESIGN.md`.
 
 ### Step 2 — Design on the canvas
 
@@ -60,7 +60,7 @@ Before code: the section components to add or reuse (with the file for each), th
 For each slot in the deck, the source the plan named:
 
 - **The owner's own**, where supplied: optimised and placed, credited in `ATTRIBUTION.md` as theirs.
-- **Stock**, where a real-world subject suits: search Unsplash or Pexels through their APIs with the keys in `.env` (ask me for one if none is configured; both are free in minutes). Fetch three to five candidates, **look at them**, pick the one that matches `DESIGN.md`'s imagery rules and the slot's crop, record its link and photographer. Never as the business's own premises, team or work.
+- **Stock**, where a real-world subject suits: search Unsplash or Pexels through their APIs with the keys in `.env.local` (ask me for one if none is configured; both are free in minutes). Fetch three to five candidates, **look at them**, pick the one that matches `DESIGN.md`'s imagery rules and the slot's crop, record its link and photographer. Never as the business's own premises, team or work.
 - **Generated**, where the image must match the system's illustration style or shows something stock can't: through the Gemini MCP when connected, with a prompt that states subject, composition, mood, colour direction from the tokens, aspect ratio and size, what must not appear. Look at the result; regenerate until it fits.
 - **Neither available**: write the prompt into `docs/design/images.md` with the slot, file name, exact size and ratio, and build a flat placeholder in a palette neutral at the final dimensions, labelled `hero-workshop.webp · 1600×1000`. Tell me in the report; place the file when I add it.
 

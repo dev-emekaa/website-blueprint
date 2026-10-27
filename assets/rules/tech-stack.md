@@ -28,9 +28,9 @@ The site is content: pages rendered at build time, a few forms, and a handful of
 
 | Need | Default | When |
 | --- | --- | --- |
-| Hosting | Vercel: previews per pull request, production from `main` | Always |
+| Hosting | Vercel: previews per pull request, production from `main`. A business site needs the Pro plan; the free plan is for non-commercial use | Always |
 | Form delivery | A transactional email API (Resend) to the owner's inbox, with a webhook to a CRM, calendar or messaging tool where the brief names one | Any form |
-| Spam protection | Honeypot and a time-to-submit check, a rate limit per IP; Cloudflare Turnstile added only when spam still gets through | Any form |
+| Spam protection | The checks `security` → Forms lists; Cloudflare Turnstile added only when spam still gets through | Any form |
 | Analytics | A privacy-friendly, cookieless provider (Vercel Web Analytics, Plausible or Umami) — no consent banner needed in most places. GA4 only when the owner needs its ad integrations, with consent | Per `analytics`; "none" is allowed |
 | Error tracking | `@sentry/nextjs` | Sites with forms or any server code |
 | Email capture | The owner's email tool through its API or form endpoint | Only when the brief's action is "subscribe" |

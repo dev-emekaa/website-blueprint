@@ -43,5 +43,5 @@
 | Design canvas | /design (Claude Design in Claude Code) |
 | Design references | Mobbin, through its MCP, when connected. Without it: — *(web research, your screenshots, or both; asked once if blank)*. Your own screenshots, if any, go in `docs/design/references/` (optional, never committed) |
 | Image generation | Gemini, through its MCP, or none |
-| Stock photo providers | Unsplash / Pexels — which are configured; their keys live in `.env` |
+| Stock photo providers | Unsplash / Pexels — which are configured; their keys live in `.env.local` |
 | Production status | not yet launched |

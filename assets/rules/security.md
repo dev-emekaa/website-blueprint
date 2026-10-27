@@ -15,13 +15,13 @@ Set once in `next.config` (or in `proxy.ts` when a nonce is needed) and verified
 
 | Header | Value |
 | --- | --- |
-| `Content-Security-Policy` | `default-src 'self'`; scripts, styles, images, fonts, frames and connections each allowed only from the origins the plan names; `frame-ancestors 'none'`; `base-uri 'self'`; `form-action 'self'`. A nonce for inline scripts where one is unavoidable; never `'unsafe-inline'` for scripts |
+| `Content-Security-Policy` | `default-src 'self'`; styles, images, fonts, frames and connections each allowed only from the origins the plan names; `frame-ancestors 'none'`; `base-uri 'self'`; `form-action 'self'`. For scripts, see below |
 | `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` |
 | `X-Content-Type-Options` | `nosniff` |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
 | `Permissions-Policy` | Camera, microphone, geolocation and the rest denied unless a feature needs one |
 
-Every third-party script, embed, font or image origin is an explicit CSP entry, added when the plan adds the service. A CSP violation in the console is a bug.
+**Scripts in the CSP.** Next.js renders small inline scripts on every page, so a static site cannot lock `script-src` to a nonce: nonces need a per-request render. The default for this blueprint is therefore a static site with `script-src 'self' 'unsafe-inline'` plus the named third-party origins, and everything else locked — the realistic best for a site with no user data. A nonce-based `script-src` (through `proxy.ts`, which makes every page dynamic) is a plan decision for a site that already renders per request. Either way, every third-party script, embed, font or image origin is an explicit CSP entry, added when the plan adds the service, and a CSP violation in the console is a bug.
 
 ## Forms
 
@@ -35,7 +35,7 @@ Every third-party script, embed, font or image origin is an explicit CSP entry, 
 
 - The site collects only what a form needs to reply. It doesn't store submissions itself unless the brief requires a log, and then with a retention period.
 - No personal data in URLs, query strings, analytics events or error-tracking payloads. Error tracking scrubs form fields.
-- A privacy page says what is collected, by which service, for how long, and how to ask for its removal. It is written from the plan's service list, so it is true.
+- The legal pages are written from the plan's service list, so they are true: a privacy page (what is collected, by which service, for how long, how to ask for its removal); an accessibility statement where the market requires one (public bodies, and businesses under the EU's accessibility law); terms where the site sells.
 - Consent: a cookieless analytics provider needs no banner in most jurisdictions. Any service that sets cookies or fingerprints (GA4, ad pixels, embedded video with tracking) loads only after consent where the brief's market requires it, and the banner is designed, not the default of a consent vendor.
 
 ## Secrets and environment
@@ -46,7 +46,7 @@ Every third-party script, embed, font or image origin is an explicit CSP entry, 
 
 ## Third parties and supply chain
 
-- Every dependency is from a known publisher, pinned by the lockfile, and updated by Dependabot with the PR checks as the gate. A dependency with a known vulnerability fails `pnpm check`.
+- Every dependency is from a known publisher, pinned by the lockfile, and updated by Dependabot with the PR checks as the gate. A dependency with a known high or critical vulnerability fails `pnpm check`.
 - Scripts from third parties load only from their own origin with Subresource Integrity where the vendor publishes a hash, never inlined from a tag manager snippet.
 - A CMS webhook that triggers revalidation verifies a secret; the CMS token used at build cannot write.
 - Embeds (maps, video, calendars) are loaded in an iframe with the narrowest `allow`, or replaced with a static preview that loads the embed on click.
@@ -54,7 +54,7 @@ Every third-party script, embed, font or image origin is an explicit CSP entry, 
 ## Deployment
 
 - Only the pipelines deploy; Vercel's dashboard is protected with two-factor authentication and the owner's account alone.
-- Preview deployments of a redesign are not indexable (`noindex` header on previews) and, where the content is confidential, protected with Vercel's password or authentication.
+- Preview deployments are not indexable — Vercel sends `X-Robots-Tag: noindex` on them; `/site-launch` verifies it — and, where a redesign is confidential, protected with Vercel's password or authentication.
 - The old site stays reachable until the redirects are verified on the new one.
 
 ## Audit

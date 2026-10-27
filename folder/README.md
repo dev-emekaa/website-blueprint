@@ -34,7 +34,7 @@ cp "$BP/templates/docs/pages.md" docs/
 Then:
 
 1. **Add the CLAUDE.md blocks.** Paste `templates/CLAUDE.md` into your project's `CLAUDE.md` (create the file if there is none). Fill in what you can of the project configuration; anything you leave blank, the skill that needs it asks for once.
-2. **Keep your screenshots out of git.** Add `docs/design/references/` to `.gitignore` if you'll put reference screenshots there.
+2. **Keep two folders out of git.** Add `docs/design/references/` (your reference screenshots) and `.checks/` (the check script's output) to `.gitignore`.
 3. **Check it worked.** Start Claude Code and run `/context` — the rules appear under Memory files (`ci-cd.md` only once a deploy file is touched). Type `/` and the nine skills are listed.
 
 > `.claude` is a hidden folder. To see it in Finder, press **Cmd + Shift + .**

@@ -22,7 +22,8 @@ State what exists, what will be created, and the decisions the plan leaves to yo
 - **The shell:** skip link, header with the nav from the plan (or none, for a landing page), footer as a designed close with contact and legal links. Placeholders in neutral tokens until `DESIGN.md` exists.
 - **Section primitives:** a `Section` wrapper carrying the rhythm tokens and the heading level; the `Field`, `Button` and restyle-ready shadcn primitives the plan's pages need (dialog, accordion, tabs) and no others.
 - **Pages:** one route per planned page, each rendering a placeholder section list from its plan entry, so the site builds and the checks run from day one. A `not-found.tsx` with the 404 copy's structure.
-- **Environment:** `lib/env.ts` validating every variable; `.env.example` naming each with a comment.
+- **Environment:** `lib/env.ts` validating every variable; `.env.example` naming each with a comment; `.env.local` ignored by git.
+- **`next.config`:** `images.formats` with AVIF and WebP; the headers and redirects come in Steps 4 and 7.
 
 ## Step 3 — Tokens *(when `DESIGN.md` exists; otherwise placeholders, and re-run this step later)*
 
@@ -36,6 +37,7 @@ State what exists, what will be created, and the decisions the plan leaves to yo
 - `lib/seo.ts`: a `pageMetadata()` helper that applies the site defaults (site name, canonical base, default Open Graph image, Twitter card) and takes a page's title, description, path and image; typed JSON-LD builders for the types in the plan's SEO map (`Organization` or `LocalBusiness`, `WebSite`, `BreadcrumbList`, `Service`, `FAQPage`, …), rendered once per page.
 - `app/sitemap.ts` and `app/robots.ts` generated from the content; `noindex` for the pages `seo` names.
 - `app/opengraph-image.tsx` for the default social image, from the brand, not a logo on a gradient.
+- The icons: `app/icon` and `apple-icon` from the brand mark, `app/manifest.ts` with the site name and colours, and `theme-color` in the metadata.
 - Redirects from the plan's map in `next.config`, permanent, none chained, none to the home page as a catch-all.
 - One canonical host: `www` or not, per the brief; the other redirects.
 
@@ -44,8 +46,8 @@ State what exists, what will be created, and the decisions the plan leaves to yo
 From the plan's forms, per `security` and `coding-standards`:
 
 - One Zod schema per form, shared by the client and the Server Action.
-- The action: validates, runs the honeypot, time-to-submit and rate-limit checks, strips and length-limits every field, delivers through the plan's service (Resend to the inbox; a webhook to the CRM or calendar where named), retries once, and returns a typed result.
-- Delivery goes to the test destination on local and preview, the real one in production (`tech-stack` → Environments), through environment variables.
+- The action: validates, runs the spam checks, strips and length-limits every field, delivers through the plan's service (Resend to the inbox; a webhook to the CRM or calendar where named), retries once, and returns a typed result.
+- Delivery goes to the test destination on local and preview, the real one in production (`tech-stack` → Environments), through environment variables. The spam checks are the ones `security` → Forms lists.
 - The form component renders the copy deck's labels, errors, pending and confirmation states; the confirmation is a live region that exists before the message.
 - A delivery failure shows the visitor another way to make contact and alerts me (Sentry, where installed; otherwise an email to the test inbox).
 
@@ -55,16 +57,16 @@ Per `analytics` and the brief's choice: the provider's script loaded after inter
 
 ## Step 7 — Security
 
-The headers from `security` in `next.config`, with a CSP that allows exactly the origins the plan's services use. Sentry where the site has forms. `pnpm audit` in the checks. Preview deployments `noindex`.
+The headers from `security` in `next.config`, with the CSP in its static form unless the plan chose the nonce form, allowing exactly the origins the plan's services use. Sentry where the site has forms. `pnpm audit` in the checks. Confirm Vercel's `noindex` on previews rather than adding one.
 
 ## Step 8 — The check suite
 
 `pnpm check` per `testing`, runnable against a local build or any URL:
 
 - Lighthouse CI with the budgets from `performance`, mobile settings, three runs, every page from the sitemap.
-- Playwright: axe on every page, reflow at 320px, screenshots at 320/768/1280/1920 into `.checks/`, each form submitted to the test destination.
+- Playwright: axe on every page, reflow at 320px, screenshots at 320/768/1280/1920 into `.checks/` (ignored by git), each form submitted to the test destination.
 - `html-validate`, `linkinator`, the metadata and structured-data checks, the header check, `pnpm audit`.
-- The audit skill's bundled check script does the same against any URL; reuse it rather than writing a second one.
+- The audit skill's bundled script (`.claude/skills/site-audit/scripts/check.mjs`) already renders every page at these widths, runs axe and Lighthouse, and checks headers, metadata, structured data and links, and exits non-zero on a failure. Wire it in as the core of `pnpm check` and add only what it doesn't do: the forms, `html-validate`, `pnpm audit`, and the plan's structured-data types.
 
 ## Step 9 — Pipelines and hosting
 

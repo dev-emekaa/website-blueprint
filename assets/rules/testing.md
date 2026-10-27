@@ -20,15 +20,15 @@ What "checked" means for a page and for the site. The tools are in `tech-stack`;
 | Reflow | Playwright at 320px | No horizontal scroll, nothing clipped |
 | Links | `linkinator` over the built site | No broken internal links; external 4xx and 5xx reported |
 | Metadata | A script over each page's `<head>` | Unique title and description within length; canonical; Open Graph image resolves; one `h1` |
-| Structured data | Parsed from each page and validated against `schema-dts` types | Parses, required fields present, types match the plan |
+| Structured data | Parsed from each page's JSON-LD | Parses; the type matches the plan's SEO map; the required fields for that type are present (the builders are typed with `schema-dts` at compile time, which is where the shapes are enforced) |
 | Security headers | Fetched from the preview or production | Every header in `security` present with the expected value |
 | Forms | Playwright: fill and submit each form to the test destination | Validation messages appear; success state renders; the test inbox receives it |
 | Screenshots | Playwright at 320, 768, 1280 and 1920, each page, light and dark where supported | Saved for review; compared with the approved design by `/site-build` |
-| Dependencies | `pnpm audit` | No known high or critical vulnerability |
+| Dependencies | `pnpm audit` | No known high or critical vulnerability (`security`) |
 
 ## By hand
 
-Tools find about a third of accessibility problems and none of the design ones. Before a page is `Checked`:
+Tools find only part of the accessibility problems (`accessibility` → Checked how) and none of the design ones. Before a page is `Checked`:
 
 - **Look at the screenshots** at every width against the approved export: hero, one interior section, the footer.
 - **Keyboard pass:** Tab through the page and any form; focus visible everywhere, order sensible, nothing trapped, Escape closes what it should.

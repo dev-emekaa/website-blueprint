@@ -23,7 +23,7 @@ How a change reaches the site. The checks are in `testing`; the environments are
 
 - `main` is protected: no direct pushes, the checks required to merge.
 - Squash merge, so every commit on `main` is one reviewed change.
-- Vercel's production deploys come from `main` only; previews from every PR. Preview URLs carry a `noindex` header.
+- Vercel's production deploys come from `main` only; previews from every PR. Vercel sends `noindex` on preview URLs; the launch checks confirm it.
 - Dependabot keeps dependencies and the pinned actions current; its PRs run the same checks.
 
 ## Pipelines

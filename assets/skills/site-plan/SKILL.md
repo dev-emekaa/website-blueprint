@@ -51,7 +51,7 @@ One table: page · intent · the search terms it answers · `<title>` · the str
 
 ## Step 4 — Content and assets
 
-- **Content plan**: for each page, what I supply (with where it is) and what gets written. Proof the business must provide is listed as questions to me, in one place.
+- **Content plan**: for each page, what I supply (with where it is) and what gets written. Proof the business must provide is listed as questions to me, in one place. For a redesign, the existing content that moves — posts, case studies, images, with their dates and URLs preserved — and where it goes: `src/content/` or the CMS.
 - **Asset manifest**: every image, video or model slot, with its page, purpose, aspect ratio and source — the owner's own, stock, or generated. Nothing is sourced yet; that is `/site-build`'s.
 - **Blog or content section**: only if the brief says someone will write. If yes, the content types and whether a CMS is needed (`tech-stack`'s trigger).
 

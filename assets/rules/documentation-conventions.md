@@ -20,7 +20,9 @@ Where everything about the site is written down, and how it stays true. Project 
 | Copy decks | `docs/copy/{page}.md`, plus `docs/copy/shared.md` for the header, footer, forms and errors | `/site-copy` | Yes, per page |
 | Approved designs | `docs/design/screens/{page}/` | `/site-build`: exports of the approved page, one folder per page | They are the approval |
 | Image prompts | `docs/design/images.md` | `/site-build`, only when an image has to be generated outside the session | — |
-| Design references | `docs/design/references/` | You, optionally: screenshots of sites you admire. Never committed | — |
+| Design references | `docs/design/references/` | The owner, optionally: screenshots of sites they admire. Never committed | — |
+| Design prototypes *(only without the canvas)* | `docs/design/screens/{page}/prototype/` | `/site-build` | — |
+| Image attribution | `public/images/ATTRIBUTION.md` | `/site-build`: every image's source and author | — |
 | Audits | `docs/audits/{yyyy-mm-dd}-{site}.md` | `/site-audit` | — |
 | Launch record | `docs/launch.md` | `/site-launch` | — |
 | Infra setup | `docs/infra/infra-setup.md` | `/site-setup`: hosting, domain, the accounts and steps only a person can do | — |
@@ -40,10 +42,10 @@ Six values, in order. A page moves forward only through them.
 | `Written` | Its copy deck is approved. |
 | `Designed` | Its design is approved and exported to `docs/design/screens/{page}/`. |
 | `Built` | It is built as designed, with real images or labelled placeholders, its metadata and structured data in place. |
-| `Checked` | `pnpm check` passes for the page: performance, accessibility, links, metadata, structured data. |
+| `Checked` | The page passes `testing`'s checks, by script and by hand. |
 | `Live` | It is on the production domain, and `/site-launch` has recorded it. |
 
-A change to a live page (`/site-fix`) keeps it `Live` and notes the change; a page that is redesigned goes back to `Designed`.
+A change to a live page (`/site-fix`) keeps it `Live` and notes the change; a page that is redesigned goes back to `Written` until its new design is approved.
 
 ## Names
 

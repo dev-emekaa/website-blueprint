@@ -22,15 +22,15 @@ For a site without a brief (a prospect's, a redesign candidate), first write dow
 
 ## Step 1 — Measure
 
-Run the bundled script against the site. From the project root:
+Run the bundled script against the site. From the project root (with `--personal` installs, the script is under `~/.claude/skills/` instead):
 
 ```bash
 node .claude/skills/site-audit/scripts/check.mjs https://example.com
 ```
 
-It renders each page (the URL, then the sitemap's pages or the links from the home page, up to 25 — `--pages N` to change) at phone, tablet and desktop widths, and writes to `.checks/{host}/{date}/`: `report.md` and `report.json` with the measurements and findings, `screens/` with a full-page screenshot per page and width, and `copy/` with each page's text. It needs Playwright, axe and Lighthouse; inside a project it uses the project's, otherwise it installs them once into `~/.cache/site-check/`. `--no-lighthouse` skips the slow part for a quick pass.
+It renders each page (the URL, then the sitemap's pages or the links from the home page, up to 25 — `--pages N` to change, `--only-url` for one page) at 320, 390, 768, 1280 and 1920px, and writes to `.checks/{host}/{date}/`: `report.md` and `report.json` with the measurements and findings, `screens/` with a full-page screenshot per page and width, and `copy/` with each page's text. It needs Playwright, axe and Lighthouse; it uses copies it can resolve from the current folder, otherwise it installs them once into `~/.cache/site-check/`. `--no-lighthouse` skips the slow part for a quick pass. The gates are the rules' budgets, so an audit of someone else's site will usually show many warnings; the report, not the count, is the judgement.
 
-It measures what can be measured: response and security headers; Lighthouse at mobile settings; axe; reflow; the `h1`, title, description, canonical, Open Graph, language, structured data; fonts, small text, images without alt or size, unlabelled fields; a visible action in the first screen; broken links. Read `report.md` first.
+It measures what can be measured: response and security headers; Lighthouse at mobile settings (three runs, the median); axe at phone and desktop; reflow; the `h1` and whether it fits two lines on a phone; title, description, canonical, Open Graph, language, structured data; fonts, small text, images without alt or size, fields with no label; a visible action in the first screen on a phone; broken links. Read `report.md` first.
 
 ## Step 2 — Look and read
 

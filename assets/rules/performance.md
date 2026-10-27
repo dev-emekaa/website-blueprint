@@ -28,7 +28,7 @@ Images are most of a page's weight and usually its LCP element.
 
 - `next/image` always, with `width` and `height`, and a `sizes` attribute that matches the layout at each breakpoint — without it the browser downloads the largest candidate.
 - The first screen's main image has `priority` and is not lazy; everything below lazy-loads.
-- Sources are resized to their largest rendered size at 2× and no larger than 2400px wide. Next serves AVIF and WebP.
+- Sources are resized to their largest rendered size at 2× and no larger than 2400px wide. `images.formats` in `next.config` lists AVIF and WebP, so Next serves both.
 - No image carries text that could be HTML. No carousel in the hero: it loads several images to show one.
 - Video: short, muted, with a poster, paused off-screen, under 5 MB inline and under 10 MB for a hero loop. Never autoplay with sound.
 

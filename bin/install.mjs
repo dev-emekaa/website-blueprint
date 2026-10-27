@@ -74,6 +74,17 @@ async function installDocs(opts) {
   }
 }
 
+/** Two folders must never be committed: the owner's reference screenshots, and the check output. */
+async function installGitignore(opts) {
+  const dest = join(CWD, '.gitignore');
+  const lines = ['docs/design/references/', '.checks/'];
+  const cur = existsSync(dest) ? await readFile(dest, 'utf8') : '';
+  const add = lines.filter(l => !cur.split('\n').some(x => x.trim() === l));
+  if (!add.length) { skipped.push('.gitignore (already lists the folders)'); return; }
+  if (!opts.dry) await writeFile(dest, (cur ? cur.trimEnd() + '\n' : '') + '# website-blueprint: never committed\n' + add.join('\n') + '\n');
+  written.push(cur ? '.gitignore (2 lines added)' : '.gitignore');
+}
+
 const docsMap = async () => `\n${MARKER}\n${await claudeTemplate()}`;
 
 async function installClaudeMd(opts) {
@@ -105,6 +116,7 @@ ${c.b('What it writes')}
   .claude/rules/           13 rules
   docs/                    pages.md · copy · design · audits · infra
   CLAUDE.md                documentation map, project configuration
+  .gitignore               docs/design/references/ and .checks/ added
 `);
 }
 
@@ -121,6 +133,7 @@ async function main() {
   const n = await installSkills(opts);
   await installRules(opts);
   await installDocs(opts);
+  await installGitignore(opts);
   await installClaudeMd(opts);
 
   const label = opts.dry ? 'would write' : 'written';

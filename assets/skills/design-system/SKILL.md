@@ -15,7 +15,7 @@ It follows the DESIGN.md format (`github.com/google-labs-code/design.md`): token
 | --- | --- |
 | `docs/site-brief.md`, approved | The business, the visitor, the voice, the ambition, the sites I admire, the brand assets to keep |
 | `docs/site-plan.md`, approved | The pages and their arguments: how many, which carry the signature or a moment, which stay quiet |
-| Brand assets | Logo, colours, type, photography. The logo's colour and geometry are inputs to the palette and shape, not the other way round |
+| Brand assets | Logo, colours, type, photography. The logo's colour and geometry are inputs to the palette and shape, not the other way round; the mark becomes the site's icon |
 | My screenshots in `docs/design/references/`, if any | Sites I admire — the most direct statement of what I want. Optional; never committed |
 | The category screenshots from `/site-brief` | What a visitor will compare this with |
 | An existing `DESIGN.md` | Extend it; never regenerate it |

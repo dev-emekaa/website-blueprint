@@ -38,6 +38,7 @@ CLAUDE.md        documentation map · project configuration
 docs/
   pages.md       the page tracker
   copy/  design/screens/  design/references/  audits/  infra/
+.gitignore       docs/design/references/ and .checks/ added, so they are never committed
 ```
 
 ### After installing
