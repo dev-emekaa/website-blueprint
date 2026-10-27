@@ -3,7 +3,6 @@ paths:
   - ".github/**"
   - "vercel.json"
   - "next.config.*"
-  - "lighthouserc.*"
   - "playwright.config.*"
   - ".env.example"
 ---

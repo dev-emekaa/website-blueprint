@@ -79,7 +79,7 @@ Start with `/site-brief` and give it the URL. It runs `/site-audit` first, recor
 
 **`/site-copy`** — Every word before any design: headlines that survive a phone, each section's claim and proof, calls to action that say what happens, form labels, errors and confirmations, meta titles and descriptions, alt text. In the brand's voice, with real proof only.
 
-**`/site-build`** — Designs a page from its copy deck on the `/design` canvas for your approval, builds it as designed, sources its images, wires its metadata, structured data and analytics event, critiques it at four widths, and runs the checks.
+**`/site-build`** — Designs a page from its copy deck on the `/design` canvas for your approval, builds it as designed, sources its images, wires its metadata, structured data and analytics event, critiques it at five widths, and runs the checks.
 
 **`/site-launch`** — Every check on every page against production, forms to the real destination, analytics firing, the domain and redirects, Search Console, and a handover that says what was written versus supplied and what to improve next.
 

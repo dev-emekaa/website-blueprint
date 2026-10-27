@@ -107,7 +107,7 @@ Every word, before any design: per page, the headline within the budget that sur
 **Writes** `docs/copy/`
 
 ### `/site-build`
-One page, or a batch: designs it from its copy deck on the `/design` canvas for your approval, builds it as designed, places images (stock looked at before use, generated, or an exact prompt with a placeholder at final size), wires its metadata, structured data and analytics event, critiques it at four widths before you see it, and runs the checks.
+One page, or a batch: designs it from its copy deck on the `/design` canvas for your approval, builds it as designed, places images (stock looked at before use, generated, or an exact prompt with a placeholder at final size), wires its metadata, structured data and analytics event, critiques it at five widths before you see it, and runs the checks.
 **Writes** the pages, `docs/design/screens/`, `docs/design/images.md`
 
 ### `/site-launch`
