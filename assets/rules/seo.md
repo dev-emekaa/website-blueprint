@@ -28,7 +28,7 @@ How the site gets found. Search engines rank pages that answer what people searc
 - `sitemap.xml` generated from the content at build, listing every indexable page with its last-modified date; `robots.txt` points to it and blocks nothing a visitor needs.
 - Utility pages — thank-you, 404, search results, preview — are `noindex`.
 - Redirects are permanent (308 or 301) and live in `next.config`. On a redesign, every old URL that had traffic or links maps to its nearest new page; none goes to the home page as a catch-all, and none chains.
-- One domain: `www` or not, HTTPS always; the other redirects.
+- One domain: `www` or not, HTTPS always; the other redirects, and so does the hosting platform's own address for the site (`project.vercel.app`), which stays reachable beside the real domain.
 - The site is fast and works on phones: `performance` and `accessibility` are not optional for ranking.
 
 ## Structured data

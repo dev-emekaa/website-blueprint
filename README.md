@@ -115,7 +115,7 @@ Takes the site live: every check on every page against production, the forms del
 **Writes** `docs/launch.md`
 
 ### `/site-audit`
-Audits any site — this one or a URL: the bundled script measures each page at three widths (Lighthouse, axe, headers, metadata, structured data, links, small text, the first screen), you read the copy and screenshots for conversion, copy and design, and the report scores each area with a prioritised fix list naming the skill that fixes each item.
+Audits any site — this one or a URL: the bundled script measures each page at five widths (Lighthouse, axe, headers, metadata, structured data, links, small text, the first screen), you read the copy and screenshots for conversion, copy and design, and the report scores each area with a prioritised fix list naming the skill that fixes each item.
 **Writes** `docs/audits/`
 
 ### `/site-fix`
@@ -170,7 +170,7 @@ The zip appears under the release's **Assets** as `website-blueprint-v{version}.
 ## Requires
 
 - Node 22 or later, and Claude Code
-- For the `/design` canvas: a recent Claude Code signed in to a claude.ai account — without it, `/design-system` and `/site-build` work as HTML prototypes instead
+- For the `/design` canvas: Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview) — without it, `/design-system` and `/site-build` work as HTML prototypes instead
 - Optional, for design research: Mobbin, connected through its MCP. Without it, the design skills research on the web, plus any screenshots you put in `docs/design/references/`
 - For the audit script: Playwright, axe and Lighthouse — the project has them; outside a project the script installs them once
 

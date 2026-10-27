@@ -83,7 +83,7 @@ Start with `/site-brief` and give it the URL. It runs `/site-audit` first, recor
 
 **`/site-launch`** — Every check on every page against production, forms to the real destination, analytics firing, the domain and redirects, Search Console, and a handover that says what was written versus supplied and what to improve next.
 
-**`/site-audit`** — Audits any site: the bundled script measures every page at three widths; you read the copy and screenshots; the report scores each area and lists the fixes in order, each naming the skill that does it.
+**`/site-audit`** — Audits any site: the bundled script measures every page at five widths; you read the copy and screenshots; the report scores each area and lists the fixes in order, each naming the skill that does it.
 
 **`/site-fix`** — Resolves one issue: reproduce, classify, the cheapest right fix, the checks re-run, the docs updated.
 
@@ -109,6 +109,6 @@ Loaded at the start of every session, except `ci-cd.md`, which loads only when a
 
 ---
 
-**Requires** Claude Code and Node 22 or later. The `/design` canvas needs a recent Claude Code signed in to a claude.ai account; without it the design skills work as HTML prototypes. Mobbin is optional. The audit script needs Playwright, axe and Lighthouse — the project has them, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
+**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. The audit script needs Playwright, axe and Lighthouse — the project has them, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
 
 © dev-emeka. All rights reserved. Licensed for use in your own projects; not for redistribution.

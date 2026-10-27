@@ -15,15 +15,16 @@ What "checked" means for a page and for the site. The tools are in `tech-stack`;
 | Types, lint, format | `tsc`, ESLint with `jsx-a11y`, Prettier | No errors |
 | Build | `next build` | Succeeds; no warnings about dynamic rendering on a page meant to be static |
 | HTML validity | `html-validate` on the built pages | No errors |
-| Performance | Lighthouse CI, mobile settings, each page | Performance ≥ 90; LCP ≤ 2.5 s, CLS ≤ 0.1; JS and page-weight budgets from `performance` |
+| Performance | Lighthouse through the check script, mobile settings, three runs, the median, each page | Performance ≥ 90; LCP ≤ 2.5 s, CLS ≤ 0.1; JS and page-weight budgets from `performance` |
 | Accessibility | `@axe-core/playwright` on each page, plus heading order, landmarks, `lang`, target sizes | Zero serious or critical violations |
 | Reflow | Playwright at 320px | No horizontal scroll, nothing clipped |
-| Links | `linkinator` over the built site | No broken internal links; external 4xx and 5xx reported |
+| Links | The check script for internal links, images and the Open Graph image; `linkinator` for external links | No broken internal links or images; external 4xx and 5xx reported |
 | Metadata | A script over each page's `<head>` | Unique title and description within length; canonical; Open Graph image resolves; one `h1` |
 | Structured data | Parsed from each page's JSON-LD | Parses; the type matches the plan's SEO map; the required fields for that type are present (the builders are typed with `schema-dts` at compile time, which is where the shapes are enforced) |
 | Security headers | Fetched from the preview or production | Every header in `security` present with the expected value |
 | Forms | Playwright: fill and submit each form to the test destination | Validation messages appear; success state renders; the test inbox receives it |
-| Screenshots | Playwright at 320, 768, 1280 and 1920, each page, light and dark where supported | Saved for review; compared with the approved design by `/site-build` |
+| Screenshots | The check script at 320, 390, 768, 1280 and 1920, each page, light and dark where supported | Saved for review; compared with the approved design by `/site-build` |
+| Redirects *(redesign)* | The check script with `--redirects` | Every old URL reaches its target in one hop |
 | Dependencies | `pnpm audit` | No known high or critical vulnerability (`security`) |
 
 ## By hand
@@ -50,4 +51,4 @@ Tools find only part of the accessibility problems (`accessibility` → Checked 
 
 - Forms in checks post to a test destination (`tech-stack` → Environments), never to the real inbox or CRM.
 - Lighthouse runs three times per page and takes the median, because single runs vary.
-- Screenshots are kept in `.checks/` and ignored by git; the approved exports in `docs/design/screens/` are the reference.
+- Screenshots and reports are kept in `.checks/` and ignored by git; the approved exports in `docs/design/screens/` are the reference. CI keeps each production deploy's `report.json` as a workflow artifact, so a regression has its "before".

@@ -21,6 +21,8 @@ Where everything about the site is written down, and how it stays true. Project 
 | Approved designs | `docs/design/screens/{page}/` | `/site-build`: exports of the approved page, one folder per page | They are the approval |
 | Image prompts | `docs/design/images.md` | `/site-build`, only when an image has to be generated outside the session | — |
 | Design references | `docs/design/references/` | The owner, optionally: screenshots of sites they admire. Never committed | — |
+| Category screenshots | `docs/design/references/category/` | `/site-brief`: the competitor sites at phone and desktop. Never committed | — |
+| Redirect map *(redesign)* | `docs/infra/redirects.csv` | `/site-setup`, from the plan: `old,new` per line, verified by the check script | — |
 | Design prototypes *(only without the canvas)* | `docs/design/screens/{page}/prototype/` | `/site-build` | — |
 | Image attribution | `public/images/ATTRIBUTION.md` | `/site-build`: every image's source and author | — |
 | Audits | `docs/audits/{yyyy-mm-dd}-{site}.md` | `/site-audit` | — |
@@ -43,7 +45,7 @@ Six values, in order. A page moves forward only through them.
 | `Designed` | Its design is approved and exported to `docs/design/screens/{page}/`. |
 | `Built` | It is built as designed, with real images or labelled placeholders, its metadata and structured data in place. |
 | `Checked` | The page passes `testing`'s checks, by script and by hand. |
-| `Live` | It is on the production domain, and `/site-launch` has recorded it. |
+| `Live` | It is on the production domain: recorded by `/site-launch`, or, for a page added after launch, by `/site-build` once it is merged and the post-deploy check passes. |
 
 A change to a live page (`/site-fix`) keeps it `Live` and notes the change; a page that is redesigned goes back to `Written` until its new design is approved.
 

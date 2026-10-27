@@ -37,9 +37,10 @@ State what exists, what will be created, and the decisions the plan leaves to yo
 - `lib/seo.ts`: a `pageMetadata()` helper that applies the site defaults (site name, canonical base, default Open Graph image, Twitter card) and takes a page's title, description, path and image; typed JSON-LD builders for the types in the plan's SEO map (`Organization` or `LocalBusiness`, `WebSite`, `BreadcrumbList`, `Service`, `FAQPage`, …), rendered once per page.
 - `app/sitemap.ts` and `app/robots.ts` generated from the content; `noindex` for the pages `seo` names.
 - `app/opengraph-image.tsx` for the default social image, from the brand, not a logo on a gradient.
-- The icons: `app/icon` and `apple-icon` from the brand mark, `app/manifest.ts` with the site name and colours, and `theme-color` in the metadata.
+- The icons: `app/icon` and `apple-icon` from the brand mark, `app/manifest.ts` with the site name and colours, and `themeColor` in the `viewport` export.
 - Redirects from the plan's map in `next.config`, permanent, none chained, none to the home page as a catch-all.
-- One canonical host: `www` or not, per the brief; the other redirects.
+- One canonical host: `www` or not, per the brief; the other redirects, and so does the project's `.vercel.app` host (a `has: host` redirect in `next.config`), because Vercel keeps that address indexable beside the real domain.
+- Redirects for a redesign from the plan's map, and the same map as `docs/infra/redirects.csv` (`old,new` per line) for the check script to verify.
 
 ## Step 5 — Forms
 
@@ -57,16 +58,15 @@ Per `analytics` and the brief's choice: the provider's script loaded after inter
 
 ## Step 7 — Security
 
-The headers from `security` in `next.config`, with the CSP in its static form unless the plan chose the nonce form, allowing exactly the origins the plan's services use. Sentry where the site has forms. `pnpm audit` in the checks. Confirm Vercel's `noindex` on previews rather than adding one.
+The headers from `security` in `next.config`, with the CSP in its static form unless the plan chose the nonce form, allowing exactly the origins the plan's services use. Sentry, server-side only unless the plan gave a reason for the browser SDK. `pnpm audit` in the checks. Confirm Vercel's `noindex` on previews rather than adding one.
 
 ## Step 8 — The check suite
 
 `pnpm check` per `testing`, runnable against a local build or any URL:
 
-- Lighthouse CI with the budgets from `performance`, mobile settings, three runs, every page from the sitemap.
-- Playwright: axe on every page, reflow at 320px, screenshots at 320/768/1280/1920 into `.checks/` (ignored by git), each form submitted to the test destination.
-- `html-validate`, `linkinator`, the metadata and structured-data checks, the header check, `pnpm audit`.
-- The audit skill's bundled script (`.claude/skills/site-audit/scripts/check.mjs`) already renders every page at these widths, runs axe and Lighthouse, and checks headers, metadata, structured data and links, and exits non-zero on a failure. Wire it in as the core of `pnpm check` and add only what it doesn't do: the forms, `html-validate`, `pnpm audit`, and the plan's structured-data types.
+- The core is the audit skill's bundled script, `.claude/skills/site-audit/scripts/check.mjs`, run with `--strict` so the budgets, headers and metadata are failures, not warnings: it renders every page from the sitemap at 320, 390, 768, 1280 and 1920, runs Lighthouse (three runs, the median) and axe, checks reflow, headers, metadata, structured data and links, keeps screenshots in `.checks/` (ignored by git), and exits non-zero on a failure. Add its packages as dev dependencies so it uses the project's copies: `playwright`, `@axe-core/playwright`, `lighthouse`, `chrome-launcher`.
+- Around it: Playwright submitting each form to the test destination; `html-validate` on the built pages; the plan's structured-data types asserted per page; `linkinator` for external links; `pnpm audit`.
+- For a redesign, `--redirects docs/infra/redirects.csv` verifies every old URL reaches its target in one hop.
 
 ## Step 9 — Pipelines and hosting
 
@@ -74,7 +74,7 @@ Per `ci-cd`: the PR workflow (types, lint, audit, build, then `pnpm check` again
 
 ## Step 10 — Infra guide
 
-`docs/infra/infra-setup.md`: every step only I can do, in order, each with where to click and what value to copy where — the domain and DNS records, the email sending domain and its DNS, the form destination account, the analytics account, Search Console verification, the Vercel environment variables. Written so a non-technical owner can follow it.
+`docs/infra/infra-setup.md`: every step only I can do, in order, each with where to click and what value to copy where — the domain and DNS records, the email sending domain and its DNS, the form destination account, the analytics account, Search Console verification, the Vercel environment variables, and the Vercel firewall rate-limit rule on form submissions (`security` → Forms). Written so a non-technical owner can follow it.
 
 ## Step 11 — Verify and report
 

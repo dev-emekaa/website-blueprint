@@ -25,7 +25,7 @@ Then confirm it against the docs: is the page doing what its deck and export say
 | Design drift | The page no longer matches its export or `DESIGN.md` | The code — or the export, if I approve the new look |
 | Copy change | New or corrected words, prices, hours, proof | The deck first, then the page |
 | Content update | A new testimonial, team member, case study, post | `src/content/` and the deck; the plan if a section is new |
-| Performance regression | A page under its budget: the before and after scores are the reproduction | The code: usually an image, a script or a dependency |
+| Performance regression | A page under its budget: the before (from `docs/launch.md` or the last deploy's check report in CI) and after scores are the reproduction | The code: usually an image, a script or a dependency |
 | Accessibility | A criterion failed, or a task a visitor can't complete | The code; the deck if labels or errors change |
 | SEO | Metadata, structured data, a redirect, an indexing error from Search Console | The code or the content; the plan's SEO map if the intent changes |
 | Security | A header, a CSP violation, a dependency advisory, spam getting through | The config or the pipeline |

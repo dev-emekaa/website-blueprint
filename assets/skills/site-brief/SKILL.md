@@ -35,7 +35,7 @@ Research before asking, so the questions are only the ones that matter. Use web 
 
 1. **The business**: what it sells, where, to whom, how it's described by itself and by others (reviews, directories, social). Its existing search presence.
 2. **The visitor**: who buys, in their own words — from reviews of this business and its competitors, forum threads, the questions people ask. What they worry about right before they choose. What they compare it against.
-3. **The category's sites**: the three to five sites a visitor would also open. For each, what it leads with, what it asks the visitor to do, what proof it shows, and what it does badly. Screenshots, so the plan and the design system can read them.
+3. **The category's sites**: the three to five sites a visitor would also open. For each, what it leads with, what it asks the visitor to do, what proof it shows, and what it does badly. Screenshot each at phone and desktop into `docs/design/references/category/` (never committed), so the plan and the design system can read them.
 4. **Search intent**: what people type to find a business like this — the services, the place, the problems. Group them by intent, note roughly how often each is searched where a tool gives you that, and which pages a competitor ranks with. This is the SEO map's raw material; keep it to a page.
 5. **Constraints**: regulation on what the business may claim (health, finance, legal, alcohol), accessibility law in its market, consent rules.
 

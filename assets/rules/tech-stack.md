@@ -21,7 +21,7 @@ The site is content: pages rendered at build time, a few forms, and a handful of
 | Metadata · structured data | Next's Metadata API · JSON-LD written by the project's `lib/seo` helpers, typed with `schema-dts` |
 | Environment variables | `@t3-oss/env-nextjs` with Zod: validated at build, `NEXT_PUBLIC_` exposure explicit |
 | Lint · format · types | ESLint (`eslint-config-next`, `eslint-plugin-jsx-a11y`) · Prettier with `prettier-plugin-tailwindcss` · `tsc` |
-| Checks | Lighthouse CI · Playwright with `@axe-core/playwright` · `linkinator` · `html-validate` — all behind `pnpm check` (`testing`) |
+| Checks | The audit skill's check script and its packages (`playwright`, `@axe-core/playwright`, `lighthouse`, `chrome-launcher`) · `html-validate` · `linkinator` for external links — all behind `pnpm check` (`testing`) |
 | Package manager | pnpm, with a committed lockfile |
 
 ## Services
@@ -32,7 +32,7 @@ The site is content: pages rendered at build time, a few forms, and a handful of
 | Form delivery | A transactional email API (Resend) to the owner's inbox, with a webhook to a CRM, calendar or messaging tool where the brief names one | Any form |
 | Spam protection | The checks `security` → Forms lists; Cloudflare Turnstile added only when spam still gets through | Any form |
 | Analytics | A privacy-friendly, cookieless provider (Vercel Web Analytics, Plausible or Umami) — no consent banner needed in most places. GA4 only when the owner needs its ad integrations, with consent | Per `analytics`; "none" is allowed |
-| Error tracking | `@sentry/nextjs` | Sites with forms or any server code |
+| Error tracking | `@sentry/nextjs`, server-side; the browser SDK only with a reason in the plan (`performance`) | Sites with forms or any server code |
 | Email capture | The owner's email tool through its API or form endpoint | Only when the brief's action is "subscribe" |
 
 ## Added only when the trigger is met

@@ -27,7 +27,7 @@ Placeholders make a page look faster than it is. The budgets are re-measured onc
 Images are most of a page's weight and usually its LCP element.
 
 - `next/image` always, with `width` and `height`, and a `sizes` attribute that matches the layout at each breakpoint — without it the browser downloads the largest candidate.
-- The first screen's main image has `priority` and is not lazy; everything below lazy-loads.
+- The first screen's main image is eager with `fetchPriority="high"`; everything below lazy-loads.
 - Sources are resized to their largest rendered size at 2× and no larger than 2400px wide. `images.formats` in `next.config` lists AVIF and WebP, so Next serves both.
 - No image carries text that could be HTML. No carousel in the hero: it loads several images to show one.
 - Video: short, muted, with a poster, paused off-screen, under 5 MB inline and under 10 MB for a hero loop. Never autoplay with sound.
@@ -42,7 +42,7 @@ Images are most of a page's weight and usually its LCP element.
 - Server Components by default; a client component is the smallest leaf that needs interaction. A page with no interaction ships almost no JavaScript.
 - Third-party scripts load after the page is interactive (`next/script`, `afterInteractive` or `lazyOnload`), and only after consent where consent is required. Each one is named in the plan with its cost; a tag manager is never added by default.
 - Heavy libraries — 3D, scroll choreography, maps, chat — load on demand, after first paint, behind a poster or a click, and never block the first screen.
-- Bundle size is checked when a dependency is added; a dependency that adds more than 30 KB compressed to every page needs a reason in the plan.
+- Bundle size is checked when a dependency is added; a dependency that adds more than 30 KB compressed to every page needs a reason in the plan. Error tracking runs server-side by default; its browser SDK ships only when the plan gives the reason.
 
 ## Layout stability
 
@@ -62,4 +62,4 @@ Animation is paid for from the same budget. Only `transform`, `opacity` and `cli
 
 - `pnpm check` runs Lighthouse on every page at mobile settings and fails under the budgets.
 - After launch, Core Web Vitals are read from Search Console and from the analytics provider where it reports them: field data from real visitors, which is what ranks.
-- A performance regression is a `/site-fix` issue: the page's score before and after is the reproduction.
+- A performance regression is a `/site-fix` issue: the page's score before and after is the reproduction. The "before" is the page's numbers in `docs/launch.md` and the check report CI keeps for each production deploy.

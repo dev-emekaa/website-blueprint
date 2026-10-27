@@ -2,7 +2,7 @@
 /**
  * check.mjs — measures a website the way a visitor and a search engine meet it.
  *
- *   node check.mjs <url> [--pages N] [--out DIR] [--no-lighthouse] [--only-url]
+ *   node check.mjs <url> [--pages N] [--out DIR] [--no-lighthouse] [--only-url] [--strict] [--redirects FILE]
  *
  * For each page (the URL, then the pages its sitemap or links reach, up to --pages, default 25):
  *   · response and security headers, redirect chain
@@ -13,7 +13,9 @@
  *   · broken internal links across the site
  *
  * The gates are the blueprint's rules (performance, accessibility, seo, security, design, conversion).
- * Exits 1 when anything FAILs, so it can be the core of `pnpm check`.
+ * Plain runs are lenient (budgets, headers and metadata are WARN) for auditing any site; --strict makes
+ * them FAIL, which is how `pnpm check` runs it. --redirects FILE (lines of `old,new`) verifies that each
+ * old URL reaches its target in one hop. Exits 1 when anything FAILs.
  *
  * Writes <out>/report.json, <out>/report.md, <out>/screens/*.png and <out>/copy/*.txt.
  * Needs playwright, @axe-core/playwright and lighthouse. It uses the project's copies when
@@ -29,11 +31,13 @@ import { pathToFileURL } from 'node:url';
 // ---------- arguments ----------
 const args = process.argv.slice(2);
 const url = args.find(a => !a.startsWith('--'));
-if (!url) { console.error('Usage: node check.mjs <url> [--pages N] [--out DIR] [--no-lighthouse] [--only-url]'); process.exit(1); }
+if (!url) { console.error('Usage: node check.mjs <url> [--pages N] [--out DIR] [--no-lighthouse] [--only-url] [--strict] [--redirects FILE]'); process.exit(1); }
 const opt = (name, def) => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : def; };
 const MAX_PAGES = Number(opt('--pages', 25));
 const NO_LH = args.includes('--no-lighthouse');
 const ONLY_URL = args.includes('--only-url');
+const STRICT = args.includes('--strict');
+const REDIRECTS = opt('--redirects', null);
 let start = new URL(url);
 const OUT = resolve(opt('--out', join('.checks', start.hostname, new Date().toISOString().slice(0, 10))));
 await mkdir(join(OUT, 'screens'), { recursive: true });
@@ -69,6 +73,7 @@ const AxeBuilder = axeMod.AxeBuilder ?? axeMod.default?.AxeBuilder ?? axeMod.def
 // ---------- helpers ----------
 const findings = [];          // { page, area, level: 'FAIL'|'WARN', text }
 const F = (page, area, level, text) => findings.push({ page, area, level, text });
+const G = (page, area, text) => F(page, area, STRICT ? 'FAIL' : 'WARN', text);   // a gate: WARN when auditing, FAIL under --strict
 const same = u => { try { const x = new URL(u, start); return x.origin === start.origin ? x.href.split('#')[0] : null; } catch { return null; } };
 const slug = u => new URL(u).pathname.replace(/\/$/, '') .replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '') || 'home';
 
@@ -129,8 +134,11 @@ const probe = () => {
   const main = document.querySelector('main') || document.body;
   const firstScreenButton = [...document.querySelectorAll('a,button')].some(el => {
     const r = el.getBoundingClientRect(); const s = getComputedStyle(el);
-    return r.top < vh && r.height > 0 && (el.tagName === 'BUTTON' || s.display.includes('inline-block') || s.display === 'flex' || s.display === 'block');
+    const inNav = !!el.closest('nav, header') && !/^(tel|mailto):/.test(el.getAttribute('href') || '');
+    return !inNav && r.top < vh && r.height > 0 && (el.tagName === 'BUTTON' || s.display.includes('inline-block') || s.display === 'flex' || s.display === 'block');
   });
+  const firstFocusable = document.querySelector('a[href], button, input, select, textarea');
+  const skipLink = !!firstFocusable && firstFocusable.tagName === 'A' && /^#./.test(firstFocusable.getAttribute('href') || '') && !!document.querySelector(firstFocusable.getAttribute('href'));
   return {
     title: document.title, titleLen: document.title.length,
     description: meta('description'), descriptionLen: meta('description').length,
@@ -142,7 +150,7 @@ const probe = () => {
     h1InFirstScreen: !!h1 && h1Rect.top < vh && h1Rect.bottom > 0, h1Lines,
     headingSkipped: skipped, headingCount: headings.length,
     landmarks: { main: !!document.querySelector('main'), nav: !!document.querySelector('nav'), header: !!document.querySelector('header'), footer: !!document.querySelector('footer') },
-    skipLink: !!document.querySelector('a[href^="#"]:is(:first-child, :nth-child(-n+3))'),
+    skipLink,
     overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth + 1,
     small, tiny, fonts: [...fonts], fontCount: fonts.size,
     images: imgs.length,
@@ -154,6 +162,7 @@ const probe = () => {
     firstScreenButton,
     ldTypes, ldInvalid: ld.some(b => b.__invalid),
     links: [...document.querySelectorAll('a[href]')].map(a => a.href),
+    assets: [...new Set([...imgs.map(i => i.currentSrc || i.src), meta('og:image')].filter(Boolean))],
     words: prose(main).split(/\s+/).length,
     copy: prose(main).slice(0, 20000),
   };
@@ -198,6 +207,7 @@ const pages = await discoverPages(browser);
 console.log(`Checking ${pages.length} page(s) on ${start.origin} → ${OUT}`);
 const report = { site: start.origin, date: new Date().toISOString(), pages: [] };
 const allLinks = new Set();
+const allAssets = new Set();
 
 for (const pageUrl of pages) {
   const name = slug(pageUrl);
@@ -209,20 +219,20 @@ for (const pageUrl of pages) {
     const info = await fetchInfo(pageUrl);
     entry.status = info.status; entry.chain = info.chain; entry.headers = info.headers;
     if (info.status >= 400) F(name, 'Response', 'FAIL', `HTTP ${info.status}`);
-    if (info.chain.length > 2) F(name, 'SEO', 'WARN', `Redirect chain of ${info.chain.length - 1} hops`);
+    if (info.chain.length > 2) G(name, 'SEO', `Redirect chain of ${info.chain.length - 1} hops`);
     const local = /^(localhost|127\.0\.0\.1)$/.test(start.hostname);
     if (!local && !/^https:/.test(info.final)) F(name, 'Security', 'FAIL', 'Not served over HTTPS');
     if (pageUrl === pages[0]) {   // headers are site-wide; judged once
       for (const [h, test] of Object.entries(REQUIRED_HEADERS)) {
-        const why = test(info.headers[h]); if (why) F('site', 'Security', 'WARN', `Header ${h}: ${why}`);
+        const why = test(info.headers[h]); if (why) G('site', 'Security', `Header ${h}: ${why}`);
       }
       const csp = info.headers['content-security-policy'] || '';
-      if (csp && !/frame-ancestors/.test(csp) && !info.headers['x-frame-options']) F('site', 'Security', 'WARN', 'No frame-ancestors or X-Frame-Options: the page can be framed');
-      if (/script-src[^;]*'unsafe-inline'/.test(csp)) F('site', 'Security', 'WARN', "CSP allows 'unsafe-inline' scripts");
+      if (csp && !/frame-ancestors/.test(csp) && !info.headers['x-frame-options']) G('site', 'Security', 'No frame-ancestors or X-Frame-Options: the page can be framed');
+      if (/script-src[^;]*'unsafe-inline'/.test(csp)) G('site', 'Security', "CSP allows 'unsafe-inline' scripts");
     }
   } catch (e) { F(name, 'Response', 'FAIL', `Could not fetch: ${e.message}`); }
 
-  // rendered at three widths
+  // rendered at five widths
   entry.widths = {};
   const WIDTHS = [['narrow', 320, 568, true], ['phone', 390, 844, true], ['tablet', 768, 1024, true], ['desktop', 1280, 800, false], ['wide', 1920, 1080, false]];
   const overflowAt = [], smallAt = [];
@@ -240,22 +250,24 @@ for (const pageUrl of pages) {
       if (label === 'desktop') {
         await writeFile(join(OUT, 'copy', `${name}.txt`), `${pageUrl}\n\n${m.copy}\n`);
         m.links.forEach(l => { const s = same(l); if (s) allLinks.add(s); });
+        m.assets.forEach(a => { try { allAssets.add(new URL(a, pageUrl).href); } catch { /* bad url */ } });
+        if (!m.skipLink) F(name, 'Accessibility', 'WARN', 'No skip link to the main content as the first focusable element (2.4.1)');
         // page-level facts, judged once
         if (m.h1Count === 0) F(name, 'SEO', 'FAIL', 'No h1');
-        if (m.h1Count > 1) F(name, 'SEO', 'WARN', `${m.h1Count} h1 elements`);
+        if (m.h1Count > 1) G(name, 'SEO', `${m.h1Count} h1 elements`);
         if (!m.titleLen) F(name, 'SEO', 'FAIL', 'No <title>');
-        else if (m.titleLen > 65) F(name, 'SEO', 'WARN', `Title is ${m.titleLen} characters; search results cut it around 60`);
+        else if (m.titleLen > 65) G(name, 'SEO', `Title is ${m.titleLen} characters; search results cut it around 60`);
         if (!m.descriptionLen) F(name, 'SEO', 'FAIL', 'No meta description');
-        else if (m.descriptionLen > 160) F(name, 'SEO', 'WARN', `Meta description is ${m.descriptionLen} characters; cut around 155`);
+        else if (m.descriptionLen > 160) G(name, 'SEO', `Meta description is ${m.descriptionLen} characters; cut around 155`);
         else if (m.descriptionLen < 50) F(name, 'SEO', 'WARN', `Meta description is only ${m.descriptionLen} characters: it won't give a reason to click`);
-        if (!m.canonical) F(name, 'SEO', 'WARN', 'No canonical URL');
-        if (!m.og.title || !m.og.image) F(name, 'SEO', 'WARN', 'Open Graph title or image missing: shared links show no preview');
+        if (!m.canonical) G(name, 'SEO', 'No canonical URL');
+        if (!m.og.title || !m.og.image) G(name, 'SEO', 'Open Graph title or image missing: shared links show no preview');
         entry.lang = m.lang;
         if (!m.viewport) F(name, 'Performance', 'FAIL', 'No viewport meta tag');
         if (m.headingSkipped) F(name, 'Accessibility', 'WARN', 'Heading levels skip (for example h2 → h4)');
         if (!m.landmarks.main) F(name, 'Accessibility', 'WARN', 'No <main> landmark');
         if (m.ldInvalid) F(name, 'SEO', 'FAIL', 'A JSON-LD block does not parse');
-        if (!m.ldTypes.length) F(name, 'SEO', 'WARN', 'No structured data');
+        if (!m.ldTypes.length) G(name, 'SEO', 'No structured data');
         entry.imagesNoAlt = m.imagesNoAlt;
         if (m.imagesNoSize) F(name, 'Performance', 'WARN', `${m.imagesNoSize} image(s) without width and height: layout can shift`);
         if (m.inputsNoLabel) F(name, 'Accessibility', 'FAIL', `${m.inputsNoLabel} form field(s) with no label — a placeholder is not a label (3.3.2)`);
@@ -282,7 +294,7 @@ for (const pageUrl of pages) {
           }
         } catch (e) { F(name, 'Accessibility', 'WARN', `axe could not run at ${label}: ${e.message}`); }
       }
-      delete m.copy; delete m.links;
+      delete m.copy; delete m.links; delete m.assets;
     } catch (e) { F(name, 'Response', 'FAIL', `Could not render at ${label}: ${e.message}`); }
     await ctx.close();
   }
@@ -322,12 +334,12 @@ for (const pageUrl of pages) {
         jsKb: Math.round((a['network-requests']?.details?.items ?? []).filter(x => x.resourceType === 'Script').reduce((s, x) => s + (x.transferSize ?? 0), 0) / 1024),
       };
       const L = entry.lighthouse;
-      if (L.performance < 90) F(name, 'Performance', L.performance < 50 ? 'FAIL' : 'WARN', `Lighthouse performance ${L.performance} on mobile (budget 90)`);
-      if (L.lcpMs > 2500) F(name, 'Performance', L.lcpMs > 4000 ? 'FAIL' : 'WARN', `LCP ${(L.lcpMs / 1000).toFixed(1)} s (budget 2.5 s)`);
-      if (L.cls > 0.1) F(name, 'Performance', L.cls > 0.25 ? 'FAIL' : 'WARN', `CLS ${L.cls} (budget 0.1)`);
+      if (L.performance < 90) F(name, 'Performance', (STRICT || L.performance < 50) ? 'FAIL' : 'WARN', `Lighthouse performance ${L.performance} on mobile (budget 90)`);
+      if (L.lcpMs > 2500) F(name, 'Performance', (STRICT || L.lcpMs > 4000) ? 'FAIL' : 'WARN', `LCP ${(L.lcpMs / 1000).toFixed(1)} s (budget 2.5 s)`);
+      if (L.cls > 0.1) F(name, 'Performance', (STRICT || L.cls > 0.25) ? 'FAIL' : 'WARN', `CLS ${L.cls} (budget 0.1)`);
       if (L.tbtMs > 300) F(name, 'Performance', 'WARN', `Total blocking time ${L.tbtMs} ms: the page is slow to respond`);
-      if (L.jsKb > 150) F(name, 'Performance', 'WARN', `${L.jsKb} KB of JavaScript transferred (budget 150 KB for a content site, 300 KB for an expressive one)`);
-      if (L.weightKb > 1536) F(name, 'Performance', 'WARN', `Page weight ${(L.weightKb / 1024).toFixed(1)} MB (budget 1.5 MB)`);
+      if (L.jsKb > 150) G(name, 'Performance', `${L.jsKb} KB of JavaScript transferred (budget 150 KB for a content site, 300 KB for an expressive one)`);
+      if (L.weightKb > 1536) G(name, 'Performance', `Page weight ${(L.weightKb / 1024).toFixed(1)} MB (budget 1.5 MB)`);
       if (L.seo < 90) F(name, 'SEO', 'WARN', `Lighthouse SEO ${L.seo}`);
       if (L.bestPractices < 90) F(name, 'Security', 'WARN', `Lighthouse best practices ${L.bestPractices}: see the Lighthouse report for console errors, mixed content or deprecated APIs`);
     } catch (e) { F(name, 'Performance', 'WARN', `Lighthouse could not run: ${e.message}`); }
@@ -348,6 +360,35 @@ for (const l of toCheck) {
 }
 report.brokenLinks = broken;
 for (const b of broken) F('site', 'SEO', 'FAIL', `Broken internal link ${b.url} (${b.status})`);
+const brokenAssets = [];
+for (const a of [...allAssets].slice(0, 300)) {
+  try {
+    let r = await fetch(a, { method: 'HEAD', redirect: 'follow', headers: { 'user-agent': 'site-check/1.0' } });
+    if (r.status === 405 || r.status === 403) r = await fetch(a, { redirect: 'follow', headers: { 'user-agent': 'site-check/1.0' } });
+    if (r.status >= 400) brokenAssets.push({ url: a, status: r.status });
+  } catch (e) { brokenAssets.push({ url: a, status: e.message }); }
+}
+report.brokenAssets = brokenAssets;
+for (const b of brokenAssets) F('site', 'SEO', 'FAIL', `Image does not load: ${b.url} (${b.status})`);
+
+// a redesign's redirect map: every old URL reaches its target in one hop
+if (REDIRECTS) {
+  const rows = (await readFile(REDIRECTS, 'utf8')).split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('#') && !/^old\s*,/i.test(l));
+  const results = [];
+  for (const row of rows) {
+    const [oldPath, newPath] = row.split(',').map(x => x.trim());
+    const from = new URL(oldPath, start).href, want = new URL(newPath, start).href;
+    try {
+      const r = await fetch(from, { redirect: 'manual', headers: { 'user-agent': 'site-check/1.0' } });
+      const loc = r.headers.get('location') ? new URL(r.headers.get('location'), from).href : null;
+      const ok = [301, 308].includes(r.status) && loc === want;
+      results.push({ from, want, status: r.status, to: loc, ok });
+      if (!ok) F('site', 'SEO', 'FAIL', `Redirect ${oldPath} → expected ${newPath}, got ${r.status}${loc ? ' → ' + loc.replace(start.origin, '') : ''}`);
+    } catch (e) { results.push({ from, want, error: e.message, ok: false }); F('site', 'SEO', 'FAIL', `Redirect ${oldPath}: ${e.message}`); }
+  }
+  report.redirects = results;
+  console.log(`Redirects: ${results.filter(r => r.ok).length}/${results.length} correct`);
+}
 report.findings = findings;
 await browser.close();
 
@@ -359,12 +400,13 @@ let md = `# Site check — ${start.origin}\n\n${report.date.slice(0, 10)} · ${p
 md += `| Page | Perf | A11y | SEO | LCP | CLS | JS | FAIL | WARN |\n| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n`;
 for (const p of report.pages) {
   const L = p.lighthouse || {}; const f = findings.filter(x => x.page === p.name);
-  md += `| ${p.url.replace(start.origin, '') || '/'} | ${L.performance ?? '—'} | ${L.accessibility ?? '—'} | ${L.seo ?? '—'} | ${L.lcpMs ? (L.lcpMs / 1000).toFixed(1) + ' s' : '—'} | ${L.cls ?? '—'} | ${L.jsKb ? L.jsKb + ' KB' : '—'} | ${f.filter(x => x.level === 'FAIL').length} | ${f.filter(x => x.level === 'WARN').length} |\n`;
+  md += `| ${p.url.replace(start.origin, '') || '/'} | ${L.performance ?? '—'} | ${L.accessibility ?? '—'} | ${L.seo ?? '—'} | ${L.lcpMs != null ? (L.lcpMs / 1000).toFixed(1) + ' s' : '—'} | ${L.cls ?? '—'} | ${L.jsKb != null ? L.jsKb + ' KB' : '—'} | ${f.filter(x => x.level === 'FAIL').length} | ${f.filter(x => x.level === 'WARN').length} |\n`;
 }
 for (const [area, list] of Object.entries(by('area')).sort()) {
   md += `\n## ${area}\n\n`;
   for (const f of list.sort((a, b) => a.level.localeCompare(b.level))) md += `- **${f.level}** \`${f.page}\` — ${f.text}\n`;
 }
+if (report.redirects) md += `\n## Redirects\n\n${report.redirects.filter(r => r.ok).length} of ${report.redirects.length} old URLs reach their target in one hop.\n`;
 md += `\nScreenshots: \`${join(OUT, 'screens')}\` · page text: \`${join(OUT, 'copy')}\` · raw data: \`${join(OUT, 'report.json')}\`\n`;
 await writeFile(join(OUT, 'report.md'), md);
 console.log(`\n${fails} FAIL, ${warns} WARN → ${join(OUT, 'report.md')}`);

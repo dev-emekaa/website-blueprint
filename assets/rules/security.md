@@ -26,7 +26,7 @@ Set once in `next.config` (or in `proxy.ts` when a nonce is needed) and verified
 ## Forms
 
 - The Server Action validates with the same Zod schema as the client, and rejects anything else; the client's validation is a convenience, not a defence.
-- Spam and abuse: a hidden honeypot field that a human never fills; a minimum time between page load and submit; a rate limit per IP on the action; Turnstile only if those fail in practice. Rejections look like success to a bot and are logged.
+- Spam and abuse: a hidden honeypot field that a human never fills; a minimum time between page load and submit; a rate limit per IP on form submissions — a Vercel firewall rate-limit rule on `POST` requests to the site, since a counter inside a serverless function resets with every instance and limits nothing; Turnstile only if those fail in practice. Rejections look like success to a bot and are logged.
 - Submissions are stripped of control characters and length-limited before delivery. Nothing from a submission is rendered as HTML, used in an email subject or header unescaped, or passed to a shell.
 - Delivery uses an API key held server-side. A delivery failure is retried once, then shown to the visitor as a failure with another way to make contact, and alerted to the owner.
 - File uploads only where the brief needs them: typed, size-limited, scanned, stored in a bucket with no public listing, never on the server's disk.

@@ -17,7 +17,7 @@ It follows the DESIGN.md format (`github.com/google-labs-code/design.md`): token
 | `docs/site-plan.md`, approved | The pages and their arguments: how many, which carry the signature or a moment, which stay quiet |
 | Brand assets | Logo, colours, type, photography. The logo's colour and geometry are inputs to the palette and shape, not the other way round; the mark becomes the site's icon |
 | My screenshots in `docs/design/references/`, if any | Sites I admire — the most direct statement of what I want. Optional; never committed |
-| The category screenshots from `/site-brief` | What a visitor will compare this with |
+| The category screenshots from `/site-brief`, in `docs/design/references/category/` | What a visitor will compare this with |
 | An existing `DESIGN.md` | Extend it; never regenerate it |
 
 If a frontend-design skill is installed in this Claude Code, read it too; it sharpens the judgement this skill asks for.

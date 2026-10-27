@@ -31,7 +31,7 @@ How a change reaches the site. The checks are in `testing`; the environments are
 | Pipeline | Trigger | What it does |
 | --- | --- | --- |
 | **1. PR checks** | Pull request opened or updated | Types, lint, build; waits for the Vercel preview; runs `pnpm check` against it with forms to the test destination |
-| **2. Production** | Merge to `main` | Vercel builds and deploys; a post-deploy job runs the metadata, headers and link checks against the production domain and a Lighthouse pass on the home page |
+| **2. Production** | Merge to `main` | Vercel builds and deploys; a post-deploy job runs the check script against the production domain and keeps its `report.json` as a workflow artifact — the "before" for any later regression |
 | **3. Scheduled audit** *(optional)* | Monthly, or as the owner sets | `pnpm check` against production, result posted as an issue when a gate fails — the site drifts as dependencies and content change |
 
 ### 1. PR checks
@@ -51,7 +51,7 @@ Vercel deploys on merge. The post-deploy job confirms the live site is what was 
 
 When this site replaces an existing one on the same domain:
 
-1. The redirect map from the plan is in `next.config` and verified on the preview with the check script before cut-over.
+1. The redirect map from the plan is in `next.config` and in `docs/infra/redirects.csv`; the check script's `--redirects` verifies every old URL on the preview before cut-over.
 2. The domain moves in DNS to Vercel; the old host stays up until the redirects and the first crawl are verified.
 3. `/site-launch` runs the full checks on the production domain, submits the sitemap, and watches Search Console for the first month.
 

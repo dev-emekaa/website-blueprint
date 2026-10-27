@@ -43,7 +43,7 @@ Dependency direction: `lib` ← `ui` ← `sections` ← `shell` ← `app`. Nothi
 
 ## Images
 
-- Always `next/image` with explicit `width` and `height` (or `fill` in a sized container), a `sizes` attribute that matches the layout, and `alt` from the copy deck. The LCP image gets `priority`; everything else lazy-loads.
+- Always `next/image` with explicit `width` and `height` (or `fill` in a sized container), a `sizes` attribute that matches the layout, and `alt` from the copy deck. The LCP image gets `fetchPriority="high"` and `loading="eager"` (`priority` is deprecated since Next.js 16); everything else lazy-loads.
 - Sources in `public/images/` are sized per `performance` and recorded in `ATTRIBUTION.md`. Next serves AVIF and WebP from them once `images.formats` lists both in `next.config` (the default is WebP only).
 - Background images that carry meaning are `<img>`, not CSS, so they get `alt` and lazy loading.
 

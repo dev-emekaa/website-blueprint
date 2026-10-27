@@ -29,7 +29,7 @@ The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with th
 ### Step 2 — Design on the canvas
 
 - **Invoke `/design`** with a brief: the business in one line, `DESIGN.md` (it reads it), the page's sections in order with their copy, the action, the signature or moment, and the references' lessons. Ask for the page at desktop and phone widths as separate artboards; the phone is its own composition, not the desktop squeezed.
-- **Where `/design` is not available** (it needs a recent Claude Code with a claude.ai login), design the page as a static HTML prototype in `docs/design/screens/{page}/prototype/`, built from the real tokens, and open it for review the same way.
+- **Where `/design` is not available** (it is a research preview on paid Claude plans and needs Claude Code 2.1.234 or later), design the page as a static HTML prototype in `docs/design/screens/{page}/prototype/`, built from the real tokens, and open it for review the same way.
 - **Judge it before showing me.** Look at it at both widths and answer: does it respect `DESIGN.md` token for token; does the first screen say what, for whom, why us, and the action; is the headline two lines on the phone; does every section make its claim with its proof beside it; is the layout equal-margined, with no void left and no shape repeated; does it carry any tell from `design` the plan didn't name; would it work unchanged for the competitor. Fix before presenting.
 - **Present** with one line per section on what it does and any decision I should look at. I edit on the canvas or ask for changes; apply them, re-check, present again. A change that contradicts the copy, the plan or the system is raised, not silently applied.
 
@@ -37,7 +37,7 @@ The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with th
 
 When I approve:
 
-1. Export every section at desktop, and the phone version of any whose layout differs, to `docs/design/screens/{page}/`, named per `documentation-conventions`. The exports are the record of what I approved. Where the canvas was used, write its link in the page's tracker row; a later canvas edit counts only once I approve it and the screens are exported again.
+1. Screenshot every section of the approved artboards at desktop, and the phone version of any whose layout differs, into `docs/design/screens/{page}/`, named per `documentation-conventions` (the canvas has no per-section export; use the browser). These exports are the record of what I approved. Where the canvas was used, write its link in the page's tracker row; a later canvas edit counts only once I approve it and the screens are exported again.
 2. Note under the tracker row anything the design decided that the copy must follow (a line that had to be shortened, a section merged).
 3. Mark the page `Designed`. Commit. If the session continues, go to Stage B; otherwise report and stop.
 
@@ -53,7 +53,7 @@ Before code: the section components to add or reuse (with the file for each), th
 - Metadata through `lib/seo`'s helper from the deck's meta; the JSON-LD builder for the plan's type; the heading level passed to each section so the page has one `h1` and an unbroken order.
 - The primary action wired: the form through the foundation's pipeline with the deck's copy, or the call or booking link; its analytics event on completion, recorded in `docs/analytics-events.md`.
 - Motion from the tokens; the signature or moment built per its storyboard, loading after the hero text and behind the device tiers.
-- Run the dev server and look at the page at 320, 768, 1280 and 1920, light and dark where it exists, as you finish each section — a picture is worth a thousand tokens. The first page builds the shared components, so a mistake caught there doesn't spread.
+- Run the dev server and look at the page at 320, 390, 768, 1280 and 1920, light and dark where it exists, as you finish each section — a picture is worth a thousand tokens. The first page builds the shared components, so a mistake caught there doesn't spread.
 
 ### Step 6 — Images
 
@@ -64,14 +64,14 @@ For each slot in the deck, the source the plan named:
 - **Generated**, where the image must match the system's illustration style or shows something stock can't: through the Gemini MCP when connected, with a prompt that states subject, composition, mood, colour direction from the tokens, aspect ratio and size, what must not appear. Look at the result; regenerate until it fits.
 - **Neither available**: write the prompt into `docs/design/images.md` with the slot, file name, exact size and ratio, and build a flat placeholder in a palette neutral at the final dimensions, labelled `hero-workshop.webp · 1600×1000`. Tell me in the report; place the file when I add it.
 
-After placing any image: resize the source to 2× its largest rendered width, set `sizes`, `priority` on the LCP image, `alt` from the deck, and look at the page again at every width — crop, focal point, contrast of any text over it, harmony with the palette. If an image itself doesn't work, say so with a revised prompt rather than forcing it.
+After placing any image: resize the source to 2× its largest rendered width, set `sizes`, `fetchPriority="high"` and eager loading on the LCP image, `alt` from the deck, and look at the page again at every width — crop, focal point, contrast of any text over it, harmony with the palette. If an image itself doesn't work, say so with a revised prompt rather than forcing it.
 
 ### Step 7 — Check
 
 1. Compare each section with its approved export at every width; fix drift in the page, or raise it if the export was wrong.
 2. `pnpm check` for the page: performance budgets (re-run once real images are in), axe, reflow, links, metadata, structured data, the form to the test destination.
 3. The checks by hand from `testing`: keyboard, screen reader on the first screen and the form, reduced motion, 200% zoom.
-4. Mark the page `Built`, then `Checked` when everything passes. Commit.
+4. Mark the page `Built`, then `Checked` when everything passes. Commit. If `CLAUDE.md`'s `Production status` is already live, the page goes `Live` once it is merged and the post-deploy check passes.
 
 ### Step 8 — Report
 
