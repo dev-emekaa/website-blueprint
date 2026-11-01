@@ -2,7 +2,7 @@
 
 **Build websites that inform and convert with Claude Code — fast, findable, accessible, and unmistakably the business's own.**
 
-For landing pages, business and marketing sites, portfolios, nonprofits, events and a product's marketing site. The site is briefed and planned before a word is written, the words are written before a pixel is designed, every page is designed for your approval, and nothing goes live until it passes the checks for speed, search, accessibility and security. Nine Claude Code skills and the rules behind them, for Next.js on Vercel.
+For landing pages, business and marketing sites, portfolios, nonprofits, events and a product's marketing site. The site is briefed and planned before a word is written, the words are written before a pixel is designed, every page is designed for your approval, and nothing goes live until it passes the checks for speed, search, accessibility and security. Ten Claude Code skills and the rules behind them, for Next.js on Vercel.
 
 **Not for** the logged-in part of a product: anything with user accounts and their data belongs in the [Web App Blueprint](https://github.com/dev-emekaa/web-app-blueprint) and the [Backend Blueprint](https://github.com/dev-emekaa/backend-blueprint). A product gets both: its marketing site from this blueprint, its app from those, in separate repos.
 
@@ -32,7 +32,7 @@ There is one stack — Next.js, TypeScript, Tailwind CSS, Vercel — so there is
 
 ```
 .claude/
-  skills/        9 skills (site-audit includes its check script)
+  skills/        10 skills (site-audit includes its check script)
   rules/         13 rules
 CLAUDE.md        documentation map · project configuration
 docs/
@@ -47,6 +47,8 @@ docs/
 2. Run `/site-brief` and tell it what the site is for — a few sentences, an existing site's URL, or a Product Brief. It researches, asks once, and writes the brief for your approval.
 3. Run `/site-plan`, then `/site-setup`, `/design-system` and `/site-copy`, then `/site-build` for the first page.
 
+**Already have a site you want to keep?** Run `/site-adopt` instead. It documents the existing site the way these skills expect and lists where it departs from the rules; `/site-setup` then fills whatever foundation the report says is missing. A site you want to rebuild starts with `/site-brief` and its URL.
+
 Commit `.claude/` with your project: cloud sessions and scheduled runs only read project skills. `--personal` is for throwaway work.
 
 ### Updating
@@ -57,7 +59,7 @@ npx github:dev-emekaa/website-blueprint init --force
 
 - Skills and rules are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
 - `CLAUDE.md` and `docs/` are never overwritten: they hold your site's content.
-- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.0.0 init`. If an update doesn't seem to land: `npm cache clean --force`.
+- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.1.0 init`. If an update doesn't seem to land: `npm cache clean --force`.
 
 ---
 
@@ -76,6 +78,7 @@ Each step needs the one before it; a skill whose inputs don't exist, or aren't a
 
 /site-audit — any site, any time: measured, read, scored, with a fix list
 /site-fix   — one issue at a time, docs and page together
+/site-adopt — once, to bring a site you're keeping under the blueprint
 ```
 
 Each page moves through `docs/pages.md`: Planned → Written → Designed → Built → Checked → Live.
@@ -121,6 +124,10 @@ Audits any site — this one or a URL: the bundled script measures each page at 
 ### `/site-fix`
 Resolves one issue: reproduces it, classifies it (bug, design drift, copy, content, performance, accessibility, SEO, security), fixes it the cheapest right way, re-runs the checks it touches, and updates the doc it changed.
 **Writes** the fix, the docs it changes
+
+### `/site-adopt`
+Brings an existing site under the blueprint, once, to keep and improve it: audits the live site, inventories the code, says whether its stack fits, reconstructs the brief, plan, copy decks, `DESIGN.md` and tracker from the site with every fact citing its source, and lists where it departs from the rules as issues. Changes no code.
+**Writes** the docs, `docs/adoption-report.md`
 
 ---
 

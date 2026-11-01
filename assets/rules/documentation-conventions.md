@@ -29,6 +29,7 @@ Where everything about the site is written down, and how it stays true. Project 
 | Launch record | `docs/launch.md` | `/site-launch` | — |
 | Infra setup | `docs/infra/infra-setup.md` | `/site-setup`: hosting, domain, the accounts and steps only a person can do | — |
 | Analytics events | `docs/analytics-events.md` | `/site-setup`, `/site-build`, `/site-fix` | — |
+| Adoption report *(only on a site the blueprint didn't start)* | `docs/adoption-report.md` | `/site-adopt`: what it found, wrote and flagged. Docs it reconstructed carry a `Reverse-engineered … — verify` line until approved | — |
 
 ## The page tracker
 
@@ -52,7 +53,7 @@ A change to a live page (`/site-fix`) keeps it `Live` and notes the change; a pa
 ## Names
 
 - Pages are named by their path: the home page is `home`, `/about` is `about`, `/services/roofing` is `services-roofing`. The same name is used for the copy deck, the design export folder and the tracker row.
-- Design exports: `docs/design/screens/{page}/{nn}-{section}.png`, numbered top to bottom, with `-mobile` for the phone version of any section whose layout differs materially.
+- Design exports: `docs/design/screens/{page}/{nn}-{section}.png`, numbered top to bottom, with `-mobile` for the phone version of any section whose layout differs materially. On an adopted site, `as-adopted-{width}.png` per page until the page is redesigned and its exports replace them.
 - Audits: dated, and named for the site audited, so audits of a prospect's site and of this one sit side by side.
 
 ## Session rules

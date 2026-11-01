@@ -112,7 +112,7 @@ ${c.b('Options')}
   --dry-run         Print what would change, write nothing
 
 ${c.b('What it writes')}
-  .claude/skills/          9 skills
+  .claude/skills/          10 skills
   .claude/rules/           13 rules
   docs/                    pages.md · copy · design · audits · infra
   CLAUDE.md                documentation map, project configuration
@@ -151,6 +151,8 @@ ${c.b('Next')}
   2. Start Claude Code and run ${c.b('/site-brief')} — tell it what the site is for.
   3. Then ${c.b('/site-plan')}, ${c.b('/site-setup')}, ${c.b('/design-system')} and ${c.b('/site-copy')},
      and ${c.b('/site-build')} for the first page.
+
+  Already have a site you want to keep? Run ${c.b('/site-adopt')} instead.
 
   ${n} skills installed to ${c.dim(opts.personal ? '~/.claude/skills' : '.claude/skills')}${
     opts.personal ? c.y('\n  Note: personal skills are not read by cloud sessions or scheduled runs.') : ''}

@@ -1,6 +1,6 @@
 # Website Blueprint
 
-Build websites that inform and convert with Claude Code — fast, findable, accessible, and unmistakably the business's own. For landing pages, business and marketing sites, portfolios, nonprofits, events and a product's marketing site. The site is briefed and planned before a word is written, the words before a pixel is designed, every page designed for your approval, and nothing goes live until it passes the checks for speed, search, accessibility and security. Nine skills and the rules behind them, for Next.js · TypeScript · Tailwind CSS, hosted on Vercel.
+Build websites that inform and convert with Claude Code — fast, findable, accessible, and unmistakably the business's own. For landing pages, business and marketing sites, portfolios, nonprofits, events and a product's marketing site. The site is briefed and planned before a word is written, the words before a pixel is designed, every page designed for your approval, and nothing goes live until it passes the checks for speed, search, accessibility and security. Ten skills and the rules behind them, for Next.js · TypeScript · Tailwind CSS, hosted on Vercel.
 
 It is not for the logged-in part of a product; that is the **Web App Blueprint** and the **Backend Blueprint**. A product gets both: its marketing site from this one, its app from those.
 
@@ -10,7 +10,7 @@ It is not for the logged-in part of a product; that is the **Web App Blueprint**
 
 ```
 website-blueprint/
-  skills/                9 skills, one folder each (site-audit includes its check script)
+  skills/                10 skills, one folder each (site-audit includes its check script)
   rules/                 the 13 rules every project uses
   templates/
     CLAUDE.md            the blocks to add to your project's CLAUDE.md
@@ -35,7 +35,7 @@ Then:
 
 1. **Add the CLAUDE.md blocks.** Paste `templates/CLAUDE.md` into your project's `CLAUDE.md` (create the file if there is none). Fill in what you can of the project configuration; anything you leave blank, the skill that needs it asks for once.
 2. **Keep two folders out of git.** Add `docs/design/references/` (your reference screenshots) and `.checks/` (the check script's output) to `.gitignore`.
-3. **Check it worked.** Start Claude Code and run `/context` — the rules appear under Memory files (`ci-cd.md` only once a deploy file is touched). Type `/` and the nine skills are listed.
+3. **Check it worked.** Start Claude Code and run `/context` — the rules appear under Memory files (`ci-cd.md` only once a deploy file is touched). Type `/` and the ten skills are listed.
 
 > `.claude` is a hidden folder. To see it in Finder, press **Cmd + Shift + .**
 
@@ -58,6 +58,10 @@ Then:
 **Redesigning an existing site**
 
 Start with `/site-brief` and give it the URL. It runs `/site-audit` first, records what to keep and what must not change, and the plan maps every old URL. The rest is the same; the launch verifies the redirects before cut-over.
+
+**Taking over an existing site you want to keep**
+
+`/site-adopt` — once: audits the live site, documents it the way these skills expect, with every fact citing its source, and lists where it departs from the rules; `/site-setup` then fills the foundation it says is missing. Then it is run like any other.
 
 **Afterwards**
 
@@ -86,6 +90,8 @@ Start with `/site-brief` and give it the URL. It runs `/site-audit` first, recor
 **`/site-audit`** — Audits any site: the bundled script measures every page at five widths; you read the copy and screenshots; the report scores each area and lists the fixes in order, each naming the skill that does it.
 
 **`/site-fix`** — Resolves one issue: reproduce, classify, the cheapest right fix, the checks re-run, the docs updated.
+
+**`/site-adopt`** — Brings an existing site under the blueprint, once, to keep and improve it: audits it, inventories the code, reconstructs the brief, plan, copy decks, `DESIGN.md` and tracker with citations, and lists deviations as issues. Changes no code.
 
 ---
 
