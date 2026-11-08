@@ -16,7 +16,7 @@ You are the design lead and the frontend engineer for this site, and the first c
 | `DESIGN.md` | How it looks and moves |
 | `docs/pages.md` | The page's status and notes |
 | The rules | `design`, `conversion`, `content`, `coding-standards`, `performance`, `seo`, `accessibility` |
-| `CLAUDE.md` | The canvas, image providers, the dev and check commands |
+| `CLAUDE.md` | The canvas, whether the designs are supplied by a designer, image providers, the dev and check commands |
 
 Order: the home page first, because it carries the signature and sets the shared components; then the pages in the plan's order.
 
@@ -24,7 +24,7 @@ Order: the home page first, because it carries the signature and sets the shared
 
 ### Step 1 — Read
 
-The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with their claim and the layout family each will use, so that no two neighbours share one and no family repeats on the page. Decide which section carries the signature or the page's moment, from the plan. For a page that already exists (a redesign of a built page), open its canvas from the tracker's link if the link still opens; otherwise design from its export and `DESIGN.md`.
+The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with their claim and the layout family each will use, so that no two neighbours share one and no family repeats on the page. Decide which section carries the signature or the page's moment, from the plan. For a page that already exists (a redesign of a built page), open its canvas from the tracker's link if it is a canvas link that still opens; otherwise design from its export and `DESIGN.md`.
 
 ### Step 2 — Design on the canvas
 
@@ -33,11 +33,13 @@ The copy deck, the plan entry, and `DESIGN.md`. List the page's sections with th
 - **Judge it before showing me.** Look at it at both widths and answer: does it respect `DESIGN.md` token for token; does the first screen say what, for whom, why us, and the action; is the headline two lines on the phone; does every section make its claim with its proof beside it; is the layout equal-margined, with no void left and no shape repeated; does it carry any tell from `design` the plan didn't name; would it work unchanged for the competitor. Fix before presenting.
 - **Present** with one line per section on what it does and any decision I should look at. I edit on the canvas or ask for changes; apply them, re-check, present again. A change that contradicts the copy, the plan or the system is raised, not silently applied.
 
+**Supplied designs are reviewed, not designed.** Where `CLAUDE.md`'s `Designs` row says a designer makes the pages, read the page at both widths through the Figma MCP where connected — exact values and text — otherwise from the designer's exports, and judge it exactly as above, with the copy deck as the words it must carry. Present the findings per section, for the designer; a page without its phone composition is a finding; nothing is fixed here. A departure from the system is corrected by the designer or, where it is deliberate, raised as `/design-system` → Later describes; a conflict with the deck or the plan is a finding too — the design changes, never the deck. A corrected page is re-read and re-checked; what passes goes to me for approval in Step 3. Where the corrections arrive in a later session, re-read the current file or exports and re-check the page; earlier findings are not carried over.
+
 ### Step 3 — Approval and checkpoint
 
 When I approve:
 
-1. Screenshot every section of the approved artboards at desktop, and the phone version of any whose layout differs, into `docs/design/screens/{page}/`, named per `documentation-conventions` (the canvas has no per-section export; use the browser). These exports are the record of what I approved. Where the canvas was used, write its link in the page's tracker row; a later canvas edit counts only once I approve it and the screens are exported again.
+1. Screenshot every section of the approved artboards at desktop, and the phone version of any whose layout differs, into `docs/design/screens/{page}/`, named per `documentation-conventions` (the canvas has no per-section export; use the browser; Figma exports through its MCP). Where the designs are the designer's exports, the folder already holds them: name each after its section, remove what was superseded, and confirm every section is present at both widths. These exports are the record of what I approved. Where the canvas was used, or the designer's Figma file, write its link in the page's tracker row; a later edit counts only once I approve it and the screens are exported again.
 2. Note under the tracker row anything the design decided that the copy must follow (a line that had to be shortened, a section merged).
 3. Mark the page `Designed`. Commit. If the session continues, go to Stage B; otherwise report and stop.
 
@@ -83,4 +85,4 @@ Once every page is `Designed`, the build stage can run for all of them in one se
 
 ## Opening the session
 
-Say which page and which stage. State the `CLAUDE.md` values that change what you do: whether the canvas and image generation are available, where design references come from, which stock providers are configured. Ask for anything missing. Then start — don't summarise the workflow back to me.
+Say which page and which stage. State the `CLAUDE.md` values that change what you do: whether the pages are supplied or designed here, whether the canvas and image generation are available, where design references come from, which stock providers are configured. Ask for anything missing. Then start — don't summarise the workflow back to me.

@@ -18,7 +18,7 @@ Where everything about the site is written down, and how it stays true. Project 
 | Design system | `DESIGN.md`, at the project root | `/design-system` | Yes |
 | Style tile *(only without the canvas)* | `docs/design/style-tile.html` | `/design-system` | — |
 | Copy decks | `docs/copy/{page}.md`, plus `docs/copy/shared.md` for the header, footer, forms and errors | `/site-copy` | Yes, per page |
-| Approved designs | `docs/design/screens/{page}/` | `/site-build`: exports of the approved page, one folder per page | They are the approval |
+| Approved designs | `docs/design/screens/{page}/` | `/site-build`: exports of the approved page, one folder per page | They are the approval once the row reads `Designed`; a designer's exports sit there under their names until then |
 | Image prompts | `docs/design/images.md` | `/site-build`, only when an image has to be generated outside the session | — |
 | Design references | `docs/design/references/` | The owner, optionally: screenshots of sites they admire. Never committed | — |
 | Category screenshots | `docs/design/references/category/` | `/site-brief`: the competitor sites at phone and desktop. Never committed | — |
@@ -33,7 +33,7 @@ Where everything about the site is written down, and how it stays true. Project 
 
 ## The page tracker
 
-`docs/pages.md` has one row per page: its path, its one primary action, its status, the date each status was reached, and notes (the `/design` canvas link, decisions the design made that the copy must follow). It never holds content: content lives in the docs.
+`docs/pages.md` has one row per page: its path, its one primary action, its status, the date each status was reached, and notes (the `/design` canvas or Figma file link, decisions the design made that the copy must follow). It never holds content: content lives in the docs.
 
 ### Statuses
 

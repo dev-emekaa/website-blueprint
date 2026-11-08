@@ -18,6 +18,7 @@ It follows the DESIGN.md format (`github.com/google-labs-code/design.md`): token
 | Brand assets | Logo, colours, type, photography. The logo's colour and geometry are inputs to the palette and shape, not the other way round; the mark becomes the site's icon |
 | My screenshots in `docs/design/references/`, if any | Sites I admire — the most direct statement of what I want. Optional; never committed |
 | The category screenshots from `/site-brief`, in `docs/design/references/category/` | What a visitor will compare this with |
+| The designer's Figma file, linked in the `Designs` row of `CLAUDE.md` where the pages are supplied | The system as designed: variables, text styles, components — read through the Figma MCP when connected, otherwise from the token values the designer supplies (a variables or styles export, or a written list). Values are read off the exports only when neither exists and I say so, each marked `measured from export — confirm` and listed for the designer. It decides the direction (Steps 2 and 3) |
 | An existing `DESIGN.md` | Extend it; never regenerate it |
 
 If a frontend-design skill is installed in this Claude Code, read it too; it sharpens the judgement this skill asks for.
@@ -32,6 +33,8 @@ Before any colour is chosen, list **eight to twelve things only this business ha
 - **Constraints**: brand assets that are fixed, dark mode (no, unless the brief says so — most business sites are light), a second language, the accessibility floor (WCAG 2.2 AA), the device tier the brief's audience sets.
 
 ## Step 2 — References
+
+Skipped where a designer's file supplies the pages: the file is the reference, and Step 3 records what it decides.
 
 The goal is to learn what the best sites in this space do well and why, then do it this business's way. References are never copied.
 
@@ -50,7 +53,7 @@ The goal is to learn what the best sites in this space do well and why, then do 
 
 ## Step 3 — The direction → **wait for my approval**
 
-Present one direction, with the reasoning from Steps 1 and 2, and one alternative where the choice is genuinely open. Open with one line: *"Reading this as: {site type} for {visitor}, with a {visual language}, built around {signature}."* Then:
+Present one direction, with the reasoning from Steps 1 and 2, and one alternative where the choice is genuinely open. Where a designer's file supplies the pages, the direction is theirs: present it as read from the file — its signature, palette, type, shape and motion as they are — and propose only what the file leaves undecided. Where the file breaks a rule this skill holds — a text pair under AA, a font that is not free — that is a finding for the designer, raised before `DESIGN.md` is written; the system records the file, never a corrected version of it. Open with one line: *"Reading this as: {site type} for {visitor}, with a {visual language}, built around {signature}."* Then:
 
 - **The signature** — the one thing a visitor will remember, which page it lives on, and why it belongs to this business and no other. Run the competitor test: if it would work unchanged on the nearest competitor's site, revise it. For a bold or experimental brief, storyboard it: trigger, states, durations, and what it becomes on each device tier.
 - **Page moments** — which pages, if any, get a smaller moment built from the signature's vocabulary, each with its claim from the plan and a one-line reason; which pages stay quiet. A landing page has one signature and nothing else.

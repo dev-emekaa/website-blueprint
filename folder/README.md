@@ -83,7 +83,7 @@ Start with `/site-brief` and give it the URL. It runs `/site-audit` first, recor
 
 **`/site-copy`** — Every word before any design: headlines that survive a phone, each section's claim and proof, calls to action that say what happens, form labels, errors and confirmations, meta titles and descriptions, alt text. In the brand's voice, with real proof only.
 
-**`/site-build`** — Designs a page from its copy deck on the `/design` canvas for your approval, builds it as designed, sources its images, wires its metadata, structured data and analytics event, critiques it at five widths, and runs the checks.
+**`/site-build`** — Designs a page from its copy deck on the `/design` canvas for your approval — or reviews a designer's — builds it as designed, sources its images, wires its metadata, structured data and analytics event, critiques it at five widths, and runs the checks.
 
 **`/site-launch`** — Every check on every page against production, forms to the real destination, analytics firing, the domain and redirects, Search Console, and a handover that says what was written versus supplied and what to improve next.
 
@@ -115,6 +115,6 @@ Loaded at the start of every session, except `ci-cd.md`, which loads only when a
 
 ---
 
-**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. The audit script needs Playwright, axe and Lighthouse — `/site-setup` installs them in the project, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
+**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. Figma is optional, for sites where a designer makes the pages: connected through its MCP, or the build skill reads the designer's exports. The audit script needs Playwright, axe and Lighthouse — `/site-setup` installs them in the project, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
 
 © dev-emeka. All rights reserved. Licensed for use in your own projects; not for redistribution.

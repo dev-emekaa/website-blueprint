@@ -59,7 +59,7 @@ npx github:dev-emekaa/website-blueprint init --force
 
 - Skills and rules are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
 - `CLAUDE.md` and `docs/` are never overwritten: they hold your site's content.
-- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.1.0 init`. If an update doesn't seem to land: `npm cache clean --force`.
+- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.2.0 init`. If an update doesn't seem to land: `npm cache clean --force`.
 
 ---
 
@@ -110,7 +110,7 @@ Every word, before any design: per page, the headline within the budget that sur
 **Writes** `docs/copy/`
 
 ### `/site-build`
-One page, or a batch: designs it from its copy deck on the `/design` canvas for your approval, builds it as designed, places images (stock looked at before use, generated, or an exact prompt with a placeholder at final size), wires its metadata, structured data and analytics event, critiques it at five widths before you see it, and runs the checks.
+One page, or a batch: designs it from its copy deck on the `/design` canvas for your approval, or reviews a designer's, builds it as designed, places images (stock looked at before use, generated, or an exact prompt with a placeholder at final size), wires its metadata, structured data and analytics event, critiques it at five widths before you see it, and runs the checks.
 **Writes** the pages, `docs/design/screens/`, `docs/design/images.md`
 
 ### `/site-launch`
@@ -178,6 +178,7 @@ The zip appears under the release's **Assets** as `website-blueprint-v{version}.
 
 - Node 22 or later, and Claude Code
 - For the `/design` canvas: Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview) — without it, `/design-system` and `/site-build` work as HTML prototypes instead
+- Optional, when a designer makes the pages: Figma, connected through its MCP. Without it, `/site-build` and `/design-system` read the designer's exports
 - Optional, for design research: Mobbin, connected through its MCP. Without it, the design skills research on the web, plus any screenshots you put in `docs/design/references/`
 - For the audit script: Playwright, axe and Lighthouse — `/site-setup` installs them in the project; outside a project the script installs them once
 
