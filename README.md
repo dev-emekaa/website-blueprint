@@ -59,7 +59,7 @@ npx github:dev-emekaa/website-blueprint init --force
 
 - Skills and rules are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
 - `CLAUDE.md` and `docs/` are never overwritten: they hold your site's content.
-- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.2.0 init`. If an update doesn't seem to land: `npm cache clean --force`.
+- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.2.1 init`. If an update doesn't seem to land: `npm cache clean --force`.
 
 ---
 
@@ -102,7 +102,7 @@ The foundation, once: the Next.js project, the shell and section primitives, fon
 **Writes** the foundation, `docs/infra/infra-setup.md`
 
 ### `/design-system`
-How the site looks and moves: inventories what only this business has, researches the category's best sites, proposes a direction with one signature — checked against the looks generated sites default to, and against the competitor test: would it work unchanged for a rival? — for your approval, then writes `DESIGN.md` and applies its tokens to the code.
+How the site looks and moves: inventories what only this business has, researches the category's best sites, proposes a direction with one signature — checked against the looks generated sites default to, and against the competitor test: would it work unchanged for a rival? — for your approval, or records a designer's, then writes `DESIGN.md` and applies its tokens to the code.
 **Writes** `DESIGN.md`
 
 ### `/site-copy`
@@ -178,7 +178,7 @@ The zip appears under the release's **Assets** as `website-blueprint-v{version}.
 
 - Node 22 or later, and Claude Code
 - For the `/design` canvas: Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview) — without it, `/design-system` and `/site-build` work as HTML prototypes instead
-- Optional, when a designer makes the pages: Figma, connected through its MCP. Without it, `/site-build` and `/design-system` read the designer's exports
+- Optional, when a designer makes the pages — say so in the `Designs` row of `CLAUDE.md`: Figma, connected through its MCP. Without it, `/site-build` and `/design-system` read the designer's exports
 - Optional, for design research: Mobbin, connected through its MCP. Without it, the design skills research on the web, plus any screenshots you put in `docs/design/references/`
 - For the audit script: Playwright, axe and Lighthouse — `/site-setup` installs them in the project; outside a project the script installs them once
 

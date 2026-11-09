@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: Create or extend the site's design system — DESIGN.md at the project root, the source of truth for how every page looks and moves — from an inventory of what only this business has, research of the category's best sites, and a direction with one signature, approved before it is written. Use once per site after the plan is approved, and again when a new page needs something the system doesn't cover.
+description: Create or extend the site's design system — DESIGN.md at the project root, the source of truth for how every page looks and moves — from an inventory of what only this business has, research of the category's best sites, and a direction with one signature — or the system a designer's file already decides — approved before it is written. Use once per site after the plan is approved, and again when a new page needs something the system doesn't cover.
 ---
 
 # Design System

@@ -1,6 +1,6 @@
 ---
 name: site-build
-description: Design and build one page, or a batch — from its approved copy deck and DESIGN.md, the page is designed on the /design canvas for approval, built as designed with real images or labelled placeholders, given its metadata and structured data, screenshotted and critiqued at four widths, then checked. Use once the page is Written and the foundation exists; one page or a batch per session.
+description: Design and build one page, or a batch — from its approved copy deck and DESIGN.md, the page is designed on the /design canvas for approval — or a designer's page reviewed — built as designed with real images or labelled placeholders, given its metadata and structured data, screenshotted and critiqued at five widths, then checked. Use once the page is Written and the foundation exists; one page or a batch per session.
 ---
 
 # Site Build
