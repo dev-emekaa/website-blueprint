@@ -43,6 +43,6 @@
 | Design canvas | /design (Claude Design in Claude Code) |
 | Designs | designed here *(default)*. Or: supplied by a designer — the Figma file `{link}`, through its MCP when connected; otherwise their exports in `docs/design/screens/{page}/` |
 | Design references | Mobbin, through its MCP, when connected. Without it: — *(web research, your screenshots, or both; asked once if blank)*. Your own screenshots, if any, go in `docs/design/references/` (optional, never committed) |
-| Image generation | Gemini, through its MCP, or none |
+| Image generation | script — Gemini *(default; or OpenAI)*, key in `.env.local` · or: MCP — {name} · or: none |
 | Stock photo providers | Unsplash / Pexels — which are configured; their keys live in `.env.local` |
 | Production status | not yet launched |

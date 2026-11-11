@@ -59,7 +59,7 @@ npx github:dev-emekaa/website-blueprint init --force
 
 - Skills and rules are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
 - `CLAUDE.md` and `docs/` are never overwritten: they hold your site's content.
-- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.2.1 init`. If an update doesn't seem to land: `npm cache clean --force`.
+- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.3.0 init`. If an update doesn't seem to land: `npm cache clean --force`.
 
 ---
 
@@ -179,6 +179,7 @@ The zip appears under the release's **Assets** as `website-blueprint-v{version}.
 - Node 22 or later, and Claude Code
 - For the `/design` canvas: Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview) — without it, `/design-system` and `/site-build` work as HTML prototypes instead
 - Optional, when a designer makes the pages — say so in the `Designs` row of `CLAUDE.md`: Figma, connected through its MCP. Without it, `/site-build` and `/design-system` read the designer's exports
+- Optional, for generated images: a Gemini or OpenAI API key in `.env.local` (`/site-setup` writes the script), or an image MCP you have configured. Without either, `/site-build` writes each image's prompt into `docs/design/images.md` for you to generate
 - Optional, for design research: Mobbin, connected through its MCP. Without it, the design skills research on the web, plus any screenshots you put in `docs/design/references/`
 - For the audit script: Playwright, axe and Lighthouse — `/site-setup` installs them in the project; outside a project the script installs them once
 

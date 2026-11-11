@@ -23,6 +23,7 @@ State what exists, what will be created, and the decisions the plan leaves to yo
 - **Section primitives:** a `Section` wrapper carrying the rhythm tokens and the heading level; the `Field`, `Button` and restyle-ready shadcn primitives the plan's pages need (dialog, accordion, tabs) and no others.
 - **Pages:** one route per planned page, each rendering a placeholder section list from its plan entry, so the site builds and the checks run from day one. A `not-found.tsx` with the 404 copy's structure.
 - **Environment:** `lib/env.ts` validating every variable; `.env.example` naming each with a comment; `.env.local` ignored by git.
+- **Image generation**, when `CLAUDE.md`'s `Image generation` row names a provider: `scripts/image-generate.mjs` with `pnpm image:generate --prompt … --ratio … --size … --out …`, using the provider's official SDK — Gemini (`@google/genai`) by default, OpenAI where the row says so. `--ratio` is one the provider supports and `--size` the longest edge in pixels; the script asks for the nearest the provider offers, resizes to fit, writes the file and prints its path, so the build skill can look at it. The key is the script's alone: named in the example env file, read from `.env.local`, never declared in the app's env validation.
 - **`next.config`:** `images.formats` with AVIF and WebP; the headers and redirects come in Steps 4 and 7.
 
 ## Step 3 — Tokens *(when `DESIGN.md` exists; otherwise placeholders, and re-run this step later)*
@@ -74,11 +75,11 @@ Per `ci-cd`: the PR workflow (types, lint, audit, build, then `pnpm check` again
 
 ## Step 10 — Infra guide
 
-`docs/infra/infra-setup.md`: every step only I can do, in order, each with where to click and what value to copy where — the domain and DNS records, the email sending domain and its DNS, the form destination account, the analytics account, Search Console verification, the Vercel environment variables, and the Vercel firewall rate-limit rule on form submissions (`security` → Forms). Written so a non-technical owner can follow it.
+`docs/infra/infra-setup.md`: every step only I can do, in order, each with where to click and what value to copy where — the domain and DNS records, the email sending domain and its DNS, the form destination account, the analytics account, the image provider's key (into `.env.local` on the machine that runs the builds, not Vercel) if `/site-build` will generate images, Search Console verification, the Vercel environment variables, and the Vercel firewall rate-limit rule on form submissions (`security` → Forms). Written so a non-technical owner can follow it.
 
 ## Step 11 — Verify and report
 
-1. `pnpm build` and `pnpm check` pass on the placeholder site; the preview deploys from a PR and the checks run against it.
+1. `pnpm build` and `pnpm check` pass on the placeholder site; where the image script was written, with no key it exits with a clear message and with one it produces a file of the requested size, which you look at; the preview deploys from a PR and the checks run against it.
 2. A test submission arrives in the test inbox from the preview.
 3. Fill in `CLAUDE.md`: the dev and check commands, the URLs, the services configured.
 4. Report: what was built, every decision made, every account and value still needed from me, and the next step — `/design-system` if `DESIGN.md` doesn't exist, otherwise `/site-copy`.

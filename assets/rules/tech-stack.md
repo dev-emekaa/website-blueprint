@@ -44,6 +44,7 @@ The site is content: pages rendered at build time, a few forms, and a handful of
 | Zustand | UI state shared across distant components: a multi-step quote flow, a configurator, a cart | Nav and dialog toggles, which are local state |
 | GSAP with ScrollTrigger | Scroll-linked timelines, pinned sections, split text — the expressive sites `design` describes | Reveals and hovers, which CSS and Motion do |
 | React Three Fiber + drei | 3D is the signature or the content | Decoration |
+| `@google/genai` (Gemini) or `openai`, as a dev dependency | `CLAUDE.md`'s `Image generation` row names a provider: `scripts/image-generate.mjs` makes the site's generated images; its key in `.env.local` | The site itself, which never calls a model |
 | Lenis | Scroll choreography that needs smoothing. Anchors, keyboard scrolling and focus must keep working; off under reduced motion | Smooth scrolling added by reflex |
 | Rive or Lottie | Designed vector animation; Rive when it reacts to input | Anything CSS can do |
 | `next-intl` | A second language | — |
