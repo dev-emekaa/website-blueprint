@@ -41,7 +41,7 @@ When I approve:
 
 1. Screenshot every section of the approved artboards at desktop, and the phone version of any whose layout differs, into `docs/design/screens/{page}/`, named per `documentation-conventions` (the canvas has no per-section export; use the browser; Figma exports through its MCP). Where the designs are the designer's exports, the folder already holds them: name each after its section, remove what was superseded, and confirm every section is present at both widths. These exports are the record of what I approved. Where the canvas was used, or the designer's Figma file, write its link in the page's tracker row; a later edit counts only once I approve it and the screens are exported again.
 2. Note under the tracker row anything the design decided that the copy must follow (a line that had to be shortened, a section merged).
-3. Mark the page `Designed`. Commit. If the session continues, go to Stage B; otherwise report and stop.
+3. Mark the page `Designed`. Commit. In a whole-site design, go on to the next page; otherwise, if the session continues, go to Stage B; otherwise report and stop.
 
 ## Stage B — Build
 
@@ -79,10 +79,14 @@ After placing any image: resize the source to 2× its largest rendered width, se
 
 The page's sections with their status, the images placed and their sources, any prompt waiting for a generated image, the proof still missing, and the next page. Keep it short.
 
+## Whole-site design
+
+The design stage can run for every `Written` page in one session, in the order above (home first): Step 1 for every page first, kept in one working note, so every page's section list and the shared section components are known before any page is designed; then each page designed and approved before the next, as Steps 2 and 3 say. A page I reject stops the run with a report; with supplied designs, a page whose findings wait on the designer is reported and the run goes on.
+
 ## Whole-site build
 
 Once every page is `Designed`, the build stage can run for all of them in one session: one build plan for the site, then the pages in order, each checked before the next. Stop at the first page whose checks fail and report.
 
 ## Opening the session
 
-Say which page and which stage. State the `CLAUDE.md` values that change what you do: whether the pages are supplied or designed here, whether the canvas and image generation are available, where design references come from, which stock providers are configured. Ask for anything missing. Then start — don't summarise the workflow back to me.
+Say which page and which stage, or which whole-site run. State the `CLAUDE.md` values that change what you do: whether the pages are supplied or designed here, whether the canvas and image generation are available, where design references come from, which stock providers are configured. Ask for anything missing. Then start — don't summarise the workflow back to me.
