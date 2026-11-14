@@ -12,6 +12,8 @@ It is not for the logged-in part of a product; that is the **Web App Blueprint**
 website-blueprint/
   skills/                10 skills, one folder each (site-audit includes its check script)
   rules/                 the 13 rules every project uses
+  docs/
+    blueprint/           website-blueprint.md — the guide, to copy into docs/ so Claude can read how the blueprint works
   templates/
     CLAUDE.md            the blocks to add to your project's CLAUDE.md
     docs/pages.md        the page tracker
@@ -28,6 +30,7 @@ BP=~/Downloads/website-blueprint
 mkdir -p .claude/rules docs/copy docs/design/screens docs/design/references docs/audits docs/infra
 cp -R "$BP/skills" .claude/
 cp "$BP"/rules/*.md .claude/rules/
+cp -R "$BP/docs/blueprint" docs/
 cp "$BP/templates/docs/pages.md" docs/
 ```
 
@@ -115,6 +118,6 @@ Loaded at the start of every session, except `ci-cd.md`, which loads only when a
 
 ---
 
-**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. Figma is optional, for sites where a designer makes the pages (say so in the `Designs` row of `CLAUDE.md`): connected through its MCP, or the build skill reads the designer's exports. Generated images take a Gemini or OpenAI API key in `.env.local`, or an image MCP you have configured; without either, the build skill writes each image's prompt into `docs/design/images.md` for you to generate. The audit script needs Playwright, axe and Lighthouse — `/site-setup` installs them in the project, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill or rule are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
+**Requires** Claude Code and Node 22 or later. The `/design` canvas needs Claude Code 2.1.234 or later on a paid Claude plan (it is a research preview); without it the design skills work as HTML prototypes. Mobbin is optional. Figma is optional, for sites where a designer makes the pages (say so in the `Designs` row of `CLAUDE.md`): connected through its MCP, or the build skill reads the designer's exports. Generated images take a Gemini or OpenAI API key in `.env.local`, or an image MCP you have configured; without either, the build skill writes each image's prompt into `docs/design/images.md` for you to generate. The audit script needs Playwright, axe and Lighthouse — `/site-setup` installs them in the project, and outside a project the script installs them once. Updates replace these files — any edits you made to a skill, a rule or the guide are overwritten, so keep your own changes in `CLAUDE.md` or new rule files.
 
 © dev-emeka. All rights reserved. Licensed for use in your own projects; not for redistribution.

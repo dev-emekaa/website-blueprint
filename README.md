@@ -38,6 +38,7 @@ CLAUDE.md        documentation map · project configuration
 docs/
   pages.md       the page tracker
   copy/  design/screens/  design/references/  audits/  infra/
+  blueprint/     this README, for Claude to read in the project
 .gitignore       docs/design/references/ and .checks/ added, so they are never committed
 ```
 
@@ -57,9 +58,9 @@ Commit `.claude/` with your project: cloud sessions and scheduled runs only read
 npx github:dev-emekaa/website-blueprint init --force
 ```
 
-- Skills and rules are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
-- `CLAUDE.md` and `docs/` are never overwritten: they hold your site's content.
-- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.3.1 init`. If an update doesn't seem to land: `npm cache clean --force`.
+- Skills, rules and the guide in `docs/blueprint/` are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
+- `CLAUDE.md` and the rest of `docs/` are never overwritten: they hold your site's content.
+- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.3.2 init`. If an update doesn't seem to land: `npm cache clean --force`.
 
 ---
 

@@ -15,6 +15,7 @@
 | Launch record | `docs/launch.md` |
 | Analytics events | `docs/analytics-events.md` |
 | Infra setup | `docs/infra/` |
+| Blueprint guide | `docs/blueprint/website-blueprint.md` |
 
 ## Project configuration
 

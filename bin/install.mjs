@@ -7,7 +7,7 @@ import { readdir, mkdir, copyFile, readFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { homedir } from 'node:os';
-import { ASSETS, RULES, DOC_DIRS, DOC_FILES, claudeTemplate } from '../lib/assets.mjs';
+import { ASSETS, GUIDE, GUIDE_NAME, RULES, DOC_DIRS, DOC_FILES, claudeTemplate } from '../lib/assets.mjs';
 
 const CWD = process.cwd();
 const MARKER = '<!-- website-blueprint:docs-map -->';
@@ -65,13 +65,18 @@ async function installRules(opts) {
   for (const f of RULES) await putFile(join(ASSETS, 'rules', f), join(CWD, '.claude', 'rules', f), opts);
 }
 
-/** docs/ holds the site's own content, so nothing here is ever overwritten, even with --force. */
+/** docs/ holds the site's own content, so nothing installed here is ever overwritten, even with --force; the guide in docs/blueprint/, installed below, is. */
 async function installDocs(opts) {
   const keep = { ...opts, force: false };
   for (const d of DOC_DIRS) await put(join(CWD, 'docs', d, '.gitkeep'), '', keep);
   for (const [dest, src] of Object.entries(DOC_FILES)) {
     await putFile(join(ASSETS, 'templates', src), join(CWD, 'docs', dest), keep);
   }
+}
+
+// The repo README, so a session in the project can read how the blueprint works.
+async function installGuide(opts) {
+  await putFile(GUIDE, join(CWD, 'docs', 'blueprint', GUIDE_NAME), opts);
 }
 
 /** Two folders must never be committed: the owner's reference screenshots, and the check output. */
@@ -115,6 +120,7 @@ ${c.b('What it writes')}
   .claude/skills/          10 skills
   .claude/rules/           13 rules
   docs/                    pages.md · copy · design · audits · infra
+  docs/blueprint/          website-blueprint.md — the blueprint's README, for Claude sessions in the project
   CLAUDE.md                documentation map, project configuration
   .gitignore               docs/design/references/ and .checks/ added
 `);
@@ -133,6 +139,7 @@ async function main() {
   const n = await installSkills(opts);
   await installRules(opts);
   await installDocs(opts);
+  await installGuide(opts);
   await installGitignore(opts);
   await installClaudeMd(opts);
 
@@ -140,7 +147,7 @@ async function main() {
   console.log(`${c.g(`${written.length} ${label}`)}${skipped.length ? c.dim(`, ${skipped.length} skipped`) : ''}\n`);
   for (const f of written) console.log(`  ${c.g('+')} ${f}`);
   if (skipped.length) {
-    console.log(c.dim(`\n  skipped (already present — use --force to overwrite skills and rules; docs and CLAUDE.md are never overwritten):`));
+    console.log(c.dim(`\n  skipped (already present — use --force to overwrite skills, rules and the guide; the rest of docs/ and CLAUDE.md are never overwritten):`));
     for (const f of skipped) console.log(c.dim(`  · ${f}`));
   }
 
