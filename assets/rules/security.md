@@ -46,7 +46,7 @@ Set once in `next.config` (or in `proxy.ts` when a nonce is needed) and verified
 
 ## Third parties and supply chain
 
-- Every dependency is from a known publisher, pinned by the lockfile, and updated by Dependabot with the PR checks as the gate. A dependency with a known high or critical vulnerability fails `pnpm check`.
+- Every dependency is from a known publisher, pinned by the lockfile, and updated by Dependabot — one grouped PR per ecosystem for the week's minor and patch updates, one PR per major — with the PR checks as the gate. A dependency with a known high or critical vulnerability fails `pnpm check`.
 - Scripts from third parties load only from their own origin with Subresource Integrity where the vendor publishes a hash, never inlined from a tag manager snippet.
 - A CMS webhook that triggers revalidation verifies a secret; the CMS token used at build cannot write.
 - Embeds (maps, video, calendars) are loaded in an iframe with the narrowest `allow`, or replaced with a static preview that loads the embed on click.

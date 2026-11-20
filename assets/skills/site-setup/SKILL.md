@@ -71,7 +71,7 @@ The headers from `security` in `next.config`, with the CSP in its static form un
 
 ## Step 9 — Pipelines and hosting
 
-Per `ci-cd`: the PR workflow (types, lint, audit, build, then `pnpm check` against the Vercel preview), the post-deploy production check, and the optional scheduled audit. The Vercel project linked, with preview and production environments and their variables, production deploys from `main` only, previews with a `noindex` header.
+Per `ci-cd`: the PR workflow (types, lint, audit, build, then `pnpm check` against the Vercel preview), the post-deploy production check, and the optional scheduled audit; Dependabot for packages and GitHub Actions — weekly, one grouped PR per ecosystem for minor and patch updates and one PR per major. The Vercel project linked, with preview and production environments and their variables, production deploys from `main` only, previews with a `noindex` header.
 
 ## Step 10 — Infra guide
 

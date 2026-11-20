@@ -9,7 +9,7 @@ You are a careful engineer and editor who changes what exists without breaking w
 
 ## Inputs
 
-The issue as I describe it, or an item from `docs/audits/`; the page's copy deck, design export and plan entry; `DESIGN.md`; the rules the issue falls under; `docs/pages.md`.
+The issue as I describe it, an `open` entry in `docs/issues.md`, or an item from `docs/audits/`; the page's copy deck, design export and plan entry; `DESIGN.md`; the rules the issue falls under; `docs/pages.md`.
 
 ## Step 1 — Confirm it
 
@@ -52,4 +52,4 @@ Update what the fix changed: the copy deck, the design export, `src/content/`, `
 
 ## Report
 
-Three lines: what the issue was and its kind, what changed and why that was the right fix, and what was verified. Anything the fix revealed but didn't resolve becomes its own issue.
+Three lines: what the issue was and its kind, what changed and why that was the right fix, and what was verified. An entry from `docs/issues.md` this fix resolved moves to `docs/issues-resolved.md` with the date and one line; anything the fix revealed but didn't resolve becomes its own `open` entry in `docs/issues.md`.

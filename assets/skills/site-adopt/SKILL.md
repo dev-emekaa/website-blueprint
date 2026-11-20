@@ -64,7 +64,8 @@ Present each page's reconstructed deck, plan entry and tracker row with their ci
 
 1. `CLAUDE.md`: the project configuration from the inventory and the brief — the **Stack** row with the verdict after it, `{what it is} — {blueprint's stack: all skills apply | not the blueprint's: documentation skills only; see docs/adoption-report.md}`; **Production status** as `live before adoption, {date}`; **Design system** as `DESIGN.md reconstructed {date}`; the commands and URLs; a row for `docs/adoption-report.md` in the documentation map. On a different stack, a note that `coding-standards` and `tech-stack` describe the blueprint's stack, not this code.
 2. **`docs/adoption-report.md`:** the inventory, the verdict, what was written and from where (each document's citations), the audit's scores, the foundation gaps, the deviations with their routing, and what I should still verify by hand. Dated. It names environment variables and services, never their values.
-3. Commit the docs and the report.
+3. **`docs/issues.md`:** every item the report routes to `/site-fix`, as an entry, so the next fix session starts from them.
+4. Commit the docs and the report.
 
 ## Report
 

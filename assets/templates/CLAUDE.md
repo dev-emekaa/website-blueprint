@@ -12,6 +12,7 @@
 | Design references *(yours, optional, never committed)* | `docs/design/references/` |
 | Image prompts | `docs/design/images.md` |
 | Audits | `docs/audits/` |
+| Issues | `docs/issues.md` |
 | Launch record | `docs/launch.md` |
 | Analytics events | `docs/analytics-events.md` |
 | Infra setup | `docs/infra/` |

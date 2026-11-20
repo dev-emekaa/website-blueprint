@@ -26,6 +26,7 @@ Where everything about the site is written down, and how it stays true. Project 
 | Design prototypes *(only without the canvas)* | `docs/design/screens/{page}/prototype/` | `/site-build` | — |
 | Image attribution | `public/images/ATTRIBUTION.md` | `/site-build`: every image's source and author | — |
 | Audits | `docs/audits/{yyyy-mm-dd}-{site}.md` | `/site-audit` | — |
+| Issues | `docs/issues.md`; a resolved entry moves to `docs/issues-resolved.md` with the date and one line | Whichever skill finds one, or the owner: an issue not fixed in the session that found it — `### {id} · {page}`, then **Found** (the date, and the skill or session), **Expected**, **Observed**, **Status** `open`; `/site-fix` resolves it | — |
 | Launch record | `docs/launch.md` | `/site-launch` | — |
 | Infra setup | `docs/infra/infra-setup.md` | `/site-setup`: hosting, domain, the accounts and steps only a person can do | — |
 | Analytics events | `docs/analytics-events.md` | `/site-setup`, `/site-build`, `/site-fix` | — |

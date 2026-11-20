@@ -92,7 +92,7 @@ Start with `/site-brief` and give it the URL. It runs `/site-audit` first, recor
 
 **`/site-audit`** — Audits any site: the bundled script measures every page at five widths; you read the copy and screenshots; the report scores each area and lists the fixes in order, each naming the skill that does it.
 
-**`/site-fix`** — Resolves one issue: reproduce, classify, the cheapest right fix, the checks re-run, the docs updated.
+**`/site-fix`** — Resolves one issue — yours, an `open` entry in `docs/issues.md`, or an audit item: reproduce, classify, the cheapest right fix, the checks re-run, the docs updated.
 
 **`/site-adopt`** — Brings an existing site under the blueprint, once, to keep and improve it: audits it, inventories the code, reconstructs the brief, plan, copy decks, `DESIGN.md` and tracker with citations, and lists deviations as issues. Changes no code.
 

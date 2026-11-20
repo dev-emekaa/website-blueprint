@@ -60,7 +60,7 @@ npx github:dev-emekaa/website-blueprint init --force
 
 - Skills, rules and the guide in `docs/blueprint/` are overwritten, including any edits you made — run it on a clean working tree and read the diff before committing.
 - `CLAUDE.md` and the rest of `docs/` are never overwritten: they hold your site's content.
-- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.3.2 init`. If an update doesn't seem to land: `npm cache clean --force`.
+- To pin a version: `npx github:dev-emekaa/website-blueprint#v1.3.3 init`. If an update doesn't seem to land: `npm cache clean --force`.
 
 ---
 
@@ -123,7 +123,7 @@ Audits any site — this one or a URL: the bundled script measures each page at 
 **Writes** `docs/audits/`
 
 ### `/site-fix`
-Resolves one issue: reproduces it, classifies it (bug, design drift, copy, content, performance, accessibility, SEO, security), fixes it the cheapest right way, re-runs the checks it touches, and updates the doc it changed.
+Resolves one issue — yours, or one logged in `docs/issues.md`: reproduces it, classifies it (bug, design drift, copy, content, performance, accessibility, SEO, security), fixes it the cheapest right way, re-runs the checks it touches, and updates the doc it changed.
 **Writes** the fix, the docs it changes
 
 ### `/site-adopt`
